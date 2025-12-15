@@ -1,0 +1,30 @@
+html, body {
+    height: 100%;
+  }
+  
+  body {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .main-content {
+    flex: 1;
+  }
+
+
+  /* Go Premium link */
+.premium-link {
+  color: #facc15 !important; /* gold */
+  font-weight: 600;
+}
+
+.premium-link:hover {
+  color: #fde047 !important;
+}
+
+/* Premium badge */
+.premium-badge {
+  color: #22c55e !important; /* green */
+  font-weight: 600;
+  cursor: default;
+}

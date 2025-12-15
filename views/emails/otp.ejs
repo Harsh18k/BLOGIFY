@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Reset Password - Blogify</title>
+</head>
+
+<body style="margin:0; padding:0; background:#f3f4f6; font-family:Arial, Helvetica, sans-serif;">
+
+  <!-- HEADER -->
+  <div style="background:#3f66e0; padding:22px; text-align:center;">
+    <h1 style="color:#ffffff; margin:0; font-weight:600;">Blogify</h1>
+  </div>
+
+  <!-- MAIN CARD -->
+  <div style="
+    max-width:520px;
+    background:#ffffff;
+    margin:30px auto;
+    padding:40px;
+    border-radius:10px;
+  ">
+
+    <!-- ICON -->
+    <div style="text-align:center; margin-bottom:25px;">
+      <img
+        src="https://cdn-icons-png.flaticon.com/512/3064/3064197.png"
+        width="80"
+        alt="lock"
+      />
+    </div>
+
+    <!-- GREETING -->
+    <p style="font-size:16px; color:#111827;">
+      Hi <strong><%= name %></strong>,
+    </p>
+
+    <!-- MESSAGE -->
+    <p style="font-size:15px; color:#374151;">
+      Here's the confirmation code you requested:
+    </p>
+
+    <!-- OTP (FIXED + BOLD + CENTER) -->
+    <div style="
+      font-size:32px;
+      font-weight:700;
+      letter-spacing:6px;
+      text-align:center;
+      margin:30px 0;
+      color:#111827;
+    ">
+      <%= otp %>
+    </div>
+
+    <!-- FOOT NOTE -->
+    <p style="font-size:14px; color:#6b7280;">
+      If you didn't request this, you can ignore this email.
+    </p>
+
+    <!-- SIGNATURE -->
+    <p style="margin-top:35px; font-size:14px; color:#111827;">
+      Thanks,<br/>
+      <strong>The Blogify Team</strong>
+    </p>
+
+  </div>
+
+</body>
+</html>

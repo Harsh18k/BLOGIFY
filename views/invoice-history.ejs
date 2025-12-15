@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>Purchase History | Blogify</title>
+
+  <style>
+    .history-card {
+      border-radius: 16px;
+    }
+
+    .page-title {
+      font-weight: 700;
+    }
+
+    .table thead th {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+      color: #6c757d;
+      border-bottom: 1px solid #dee2e6;
+      white-space: nowrap;
+    }
+
+    .table tbody td {
+      vertical-align: middle;
+      white-space: nowrap;
+    }
+
+    .invoice-id {
+      font-family: monospace;
+      font-size: 13px;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #6c757d;
+    }
+
+    .empty-state h5 {
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<%- include('./partials/nav') %>
+
+<div class="main-content">
+  <div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h4 class="page-title mb-0">Purchase History</h4>
+
+      <a href="/user/my-plans" class="btn btn-outline-secondary btn-sm">
+        ← Back to Subscription
+      </a>
+    </div>
+
+    <div class="card shadow-sm border-0 history-card">
+      <div class="card-body p-4">
+
+        <% if (!invoices || invoices.length === 0) { %>
+
+          <!-- EMPTY STATE -->
+          <div class="empty-state">
+            <h5>No invoices found</h5>
+            <p class="mb-0">
+              Your purchase history will appear here once you buy a plan.
+            </p>
+          </div>
+
+        <% } else { %>
+
+          <div class="table-responsive">
+            <table class="table align-middle mb-0">
+
+              <thead>
+                <tr>
+                  <th>Invoice</th>
+                  <th>Plan</th>
+                  <th>Amount</th>
+                  <th>Purchased On</th>
+                  <th>Valid Till</th>
+                  <th class="text-end">Action</th>
+                </tr>
+              </thead>
+
+              <tbody>
+                <% invoices.forEach(inv => { %>
+                  <tr>
+
+                    <td class="invoice-id fw-semibold">
+                      <%= inv.invoiceNumber %>
+                    </td>
+
+                    <td>
+                      <%= inv.planName %>
+                    </td>
+
+                    <td>
+                      ₹<%= inv.amount %>
+                    </td>
+
+                    <td>
+                      <%= new Date(inv.invoiceDate).toDateString() %>
+                    </td>
+
+                    <td>
+                      <%= new Date(inv.expiryDate).toDateString() %>
+                    </td>
+
+                    <td class="text-end">
+                      <a
+                        href="/invoices/<%= inv._id %>/download"
+                        class="btn btn-sm btn-outline-primary"
+                      >
+                         Download Invoice
+                      </a>
+                    </td>
+
+                  </tr>
+                <% }) %>
+              </tbody>
+
+            </table>
+          </div>
+
+        <% } %>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%- include('./partials/footer') %>
+<%- include('./partials/script') %>
+</body>
+</html>

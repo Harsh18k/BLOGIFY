@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>Pricing | Blogify</title>
+
+  <style>
+    /* Pricing cards */
+    .pricing-card {
+      transition: transform 0.2s ease, border 0.2s ease;
+      border-radius: 10px;
+      border: 1px solid #dee2e6;
+    }
+
+    .pricing-card:hover {
+      transform: translateY(-4px);
+      border: 2px solid #0d6efd;
+    }
+
+    .price {
+      font-size: 34px;
+      font-weight: 700;
+    }
+
+    .old-price {
+      text-decoration: line-through;
+      color: #6c757d;
+      font-size: 14px;
+    }
+
+    .save-badge {
+      font-size: 13px;
+    }
+
+    .feature-list li {
+      margin-bottom: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <%- include('./partials/nav') %>
+
+  <!-- ✅ MAIN CONTENT -->
+  <div class="main-content">
+    <div class="container mt-4">
+
+      <!-- Heading -->
+      <div class="text-center mb-5">
+        <h2 class="fw-bold">Upgrade to Premium</h2>
+        <p class="text-muted">
+          More value when you commit longer 💙
+        </p>
+      </div>
+
+      <div class="row justify-content-center g-4">
+
+        <!-- MONTHLY PLAN -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm pricing-card">
+            <div class="card-body text-center d-flex flex-column">
+
+              <h5 class="fw-bold">Monthly</h5>
+              <p class="text-muted">Pay as you go</p>
+
+              <div class="price">₹199</div>
+              <p class="text-muted">per month</p>
+
+              <ul class="list-unstyled feature-list mt-3">
+                <li>✨ Unlimited blog posts</li>
+                <li>📊 Blog analytics</li>
+                <li>💾 Draft autosave</li>
+                <li>🎨 Premium badge</li>
+              </ul>
+
+              <!-- Button pushed to bottom -->
+              <form action="/payment/start" method="POST" class="mt-auto">
+                <input type="hidden" name="plan" value="monthly">
+                <button class="btn btn-outline-primary w-100 mt-3">
+                  Choose Monthly
+                </button>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 MONTH PLAN -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm pricing-card">
+            <div class="card-body text-center d-flex flex-column">
+
+              <span class="badge bg-success save-badge mb-2">
+                Save ₹195
+              </span>
+
+              <h5 class="fw-bold">6 Months</h5>
+              <p class="text-muted">Best for consistency</p>
+
+              <div class="price">₹999</div>
+              <div class="old-price">₹1194</div>
+              <p class="text-muted">₹167 / month</p>
+
+              <ul class="list-unstyled feature-list mt-3">
+                <li>✨ Everything in Monthly</li>
+                <li>⚡ Priority support</li>
+                <li>🔥 Better value</li>
+              </ul>
+
+              <!-- Button pushed to bottom -->
+              <form action="/payment/start" method="POST" class="mt-auto">
+                <input type="hidden" name="plan" value="6month">
+                <button class="btn btn-outline-primary w-100 mt-3">
+                  Choose 6 Months
+                </button>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- 12 MONTH PLAN -->
+        <div class="col-md-4">
+          <div class="card h-100 shadow-sm pricing-card">
+            <div class="card-body text-center d-flex flex-column">
+
+              <span class="badge bg-warning text-dark save-badge mb-2">
+                Best Value ⭐ Save ₹589
+              </span>
+
+              <h5 class="fw-bold">12 Months</h5>
+              <p class="text-muted">Maximum savings</p>
+
+              <div class="price">₹1799</div>
+              <div class="old-price">₹2388</div>
+              <p class="text-muted">₹150 / month</p>
+
+              <ul class="list-unstyled feature-list mt-3">
+                <li>✨ Everything in 6 Months</li>
+                <li>🚀 Lowest monthly cost</li>
+                <li>🏆 Best for serious creators</li>
+              </ul>
+
+              <!-- Button pushed to bottom -->
+              <form action="/payment/start" method="POST" class="mt-auto">
+                <input type="hidden" name="plan" value="12month">
+                <button class="btn btn-outline-primary w-100 mt-3">
+                  Choose 12 Months
+                </button>
+              </form>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+  <!-- ✅ END MAIN CONTENT -->
+
+  <%- include('./partials/footer') %>
+  <%- include('./partials/script') %>
+</body>
+</html>

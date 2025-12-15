@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <%- include('./partials/head') %>
+    <title>Signin</title>
+</head>
+
+<body>
+    <%- include('./partials/nav') %>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        <div class="container mt-4" style="max-width: 450px;">
+
+            <!-- Google Sign-in Button -->
+            <div class="text-center mb-3">
+                <a href="/auth/google" class="btn btn-light border d-flex justify-content-center align-items-center">
+                    <img src="https://developers.google.com/identity/images/g-logo.png"
+                         style="width: 20px; height: 20px; margin-right: 10px;">
+                    Continue with Google
+                </a>
+            </div>
+
+            <div class="text-center my-3">
+                <small class="text-muted">— or sign in —</small>
+            </div>
+
+            <!-- Normal Signin Form -->
+            <form action="/user/signin" method="post">
+
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email address</label>
+                    <input type="email" class="form-control" id="email" name="email">
+                </div>
+
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" class="form-control" id="password" name="password">
+                </div>
+
+                <!-- 🔹 FORGOT PASSWORD LINK -->
+                <div class="text-end mb-3">
+                    <a href="/user/forgot-password" class="text-decoration-none small">
+                        Forgot password?
+                    </a>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Signin</button>
+            </form>
+
+        </div>
+    </div>
+    <!-- END MAIN CONTENT -->
+
+    <%- include("./partials/footer") %>
+    <%- include('./partials/script') %>
+</body>
+
+</html>

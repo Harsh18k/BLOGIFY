@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>Subscription Cancelled</title>
+</head>
+
+<body style="margin:0;padding:0;background:#fff1f1;font-family:Arial,Helvetica,sans-serif;">
+
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+    <tr>
+      <td align="center">
+
+        <!-- MAIN CARD -->
+        <table width="600" cellpadding="0" cellspacing="0"
+          style="background:#ffffff;border-radius:12px;padding:40px;">
+
+          <!-- LOGO -->
+          <tr>
+            <td align="center" style="padding-bottom:20px;">
+              <h2 style="margin:0;color:#111;">Blogify</h2>
+            </td>
+          </tr>
+
+          <tr>
+            <td>
+              <hr style="border:none;border-top:1px solid #eaeaea;">
+            </td>
+          </tr>
+
+          <!-- CANCEL ICON -->
+          <tr>
+            <td align="center" style="padding:30px 0;">
+              <table cellpadding="0" cellspacing="0"
+                style="
+                  width:70px;
+                  height:70px;
+                  background:#dc3545;
+                  border-radius:50%;
+                  text-align:center;
+                ">
+                <tr>
+                  <td style="color:#fff;font-size:32px;line-height:70px;">
+                    ✕
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- TITLE -->
+          <tr>
+            <td align="center">
+              <h1 style="margin:0;color:#111;">
+                Subscription Cancelled
+              </h1>
+            </td>
+          </tr>
+
+          <!-- MESSAGE -->
+          <tr>
+            <td align="center" style="padding:16px 0 30px;">
+              <p style="margin:0;color:#555;font-size:16px;line-height:1.5;">
+                Hi <strong><%= name %></strong>,<br><br>
+                Your <strong><%= planName %></strong> subscription has been
+                cancelled successfully.
+              </p>
+            </td>
+          </tr>
+
+          <!-- DETAILS -->
+          <tr>
+            <td>
+              <h3 style="margin-bottom:10px;">Cancellation Details</h3>
+              <hr style="border:none;border-top:1px solid #eaeaea;">
+            </td>
+          </tr>
+
+          <tr>
+            <td style="padding-top:10px;">
+              <table width="100%" cellpadding="6">
+                <tr>
+                  <td style="color:#555;">Plan</td>
+                  <td align="right"><strong><%= planName %></strong></td>
+                </tr>
+                <tr>
+                  <td style="color:#555;">Cancelled On</td>
+                  <td align="right"><strong><%= cancelledAt %></strong></td>
+                </tr>
+                <tr>
+                  <td style="color:#555;">Status</td>
+                  <td align="right">
+                    <span style="color:#dc3545;font-weight:bold;">
+                      Cancelled
+                    </span>
+                  </td>
+                </tr>
+              </table>
+            </td>
+          </tr>
+
+          <!-- INFO BOX -->
+          <tr>
+            <td style="padding-top:22px;">
+              <div style="
+                background:#fff5f5;
+                border:1px dashed #dc3545;
+                border-radius:8px;
+                padding:14px;
+                text-align:center;
+                font-size:14px;
+                color:#333;
+              ">
+                ⚠️ <strong>Your premium access has ended immediately</strong><br>
+                <span style="font-size:13px;color:#555;">
+                  You can re-subscribe anytime from your Blogify account
+                </span>
+              </div>
+            </td>
+          </tr>
+
+          <!-- FOOTER NOTE -->
+          <tr>
+            <td style="padding-top:30px;text-align:center;">
+              <p style="font-size:14px;color:#777;">
+                Need help or changed your mind?  
+                <a href="mailto:kushwahaharsh98@gmail.com"
+                   style="color:#0d6efd;text-decoration:none;">
+                  Contact Support
+                </a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+
+        <!-- COPYRIGHT -->
+        <p style="font-size:12px;color:#999;margin-top:12px;">
+          © <%= year %> Blogify · Built by Harsh
+        </p>
+
+      </td>
+    </tr>
+  </table>
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>My Blogs</title>
+</head>
+<body>
+
+<%- include('./partials/nav') %>
+
+<!-- ✅ MAIN CONTENT WRAPPER (ONLY ADDITION) -->
+<div class="main-content">
+  <div class="container mt-4">
+
+    <h3 class="mb-4">My Blogs</h3>
+
+    <% if (blogs.length === 0) { %>
+      <div class="alert alert-light border">
+        You haven’t published any blogs yet.
+      </div>
+    <% } %>
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+
+      <% blogs.forEach(blog => { %>
+        <div class="col">
+
+          <div class="card h-100 shadow-sm">
+
+            <!-- Blog Image -->
+            <img
+              src="<%= blog.coverImageURL %>"
+              class="card-img-top"
+              style="height:180px; object-fit:cover;"
+              alt="Blog Image"
+            >
+
+            <div class="card-body d-flex flex-column">
+
+              <!-- Title -->
+              <h5 class="card-title text-truncate">
+                <%= blog.title %>
+              </h5>
+
+              <!-- Body -->
+              <p class="card-text text-muted" style="
+                display: -webkit-box;
+                -webkit-line-clamp: 3;
+                -webkit-box-orient: vertical;
+                overflow: hidden;">
+                <%= blog.body %>
+              </p>
+
+              <div class="mt-auto">
+                <a href="/blog/<%= blog._id %>" class="btn btn-sm btn-primary">
+                  View
+                </a>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+      <% }) %>
+
+    </div>
+
+  </div>
+</div>
+<!-- ✅ END MAIN CONTENT -->
+
+<%- include("./partials/footer") %>
+<%- include('./partials/script') %>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>Checkout | Blogify</title>
+</head>
+
+<body>
+  <%- include('./partials/nav') %>
+
+  <div class="main-content">
+    <div class="container mt-5 text-center">
+
+      <h3 class="fw-bold">Confirming your payment</h3>
+
+      <p class="text-muted mt-2">
+        You are upgrading to <strong><%= plan %></strong> plan
+      </p>
+
+      <h2 class="fw-bold mt-3">₹<%= amount %></h2>
+
+      <p class="text-muted mt-3">
+        Please wait, redirecting you to the secure payment gateway…
+      </p>
+
+      <div class="spinner-border text-primary mt-4"></div>
+
+    </div>
+  </div>
+
+  <%- include('./partials/footer') %>
+  <%- include('./partials/script') %>
+
+  <!-- Razorpay -->
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+  <script>
+    let opened = false;
+
+    function startPayment() {
+      if (opened) return;
+      opened = true;
+
+      const options = {
+        key: "<%= razorpayKey %>",
+        amount: "<%= order.amount %>",
+        currency: "INR",
+        name: "Blogify",
+        description: "Premium Subscription",
+        order_id: "<%= order.id %>",
+
+        prefill: {
+          name: "<%= user.fullName %>",
+          email: "<%= user.email %>"
+        },
+
+        theme: {
+          color: "#0d6efd"
+        },
+
+        modal: {
+          ondismiss: function () {
+            window.location.href = "/pricing";
+          }
+        },
+
+        handler: function (response) {
+          const form = document.createElement("form");
+          form.method = "POST";
+          form.action = "/payment/verify";
+
+          const fields = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            plan: "<%= plan %>"
+          };
+
+          for (let key in fields) {
+            const input = document.createElement("input");
+            input.type = "hidden";
+            input.name = key;
+            input.value = fields[key];
+            form.appendChild(input);
+          }
+
+          document.body.appendChild(form);
+          form.submit();
+        }
+      };
+
+      new Razorpay(options).open();
+    }
+
+    // Delay popup for better UX
+    setTimeout(startPayment, 1200);
+  </script>
+
+</body>
+</html>

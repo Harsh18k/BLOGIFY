@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Verify OTP</title>
+</head>
+<body>
+
+<%- include('./partials/nav') %>
+
+<div class="main-content">
+    <div class="container mt-5" style="max-width: 420px;">
+
+        <div class="card shadow-sm border-0">
+            <div class="card-body p-4">
+
+                <h4 class="text-center mb-3">Verify OTP</h4>
+                <p class="text-muted text-center mb-4">
+                    Enter the 6-digit OTP sent to your email
+                </p>
+
+                <form action="/user/verify-otp" method="post">
+
+                    <!-- ✅ REQUIRED: EMAIL (HIDDEN) -->
+                    <input 
+                        type="hidden" 
+                        name="email" 
+                        value="<%= email %>"
+                    >
+
+                    <div class="mb-3">
+                        <label class="form-label">OTP</label>
+                        <input 
+                            type="text" 
+                            class="form-control text-center"
+                            name="otp"
+                            maxlength="6"
+                            required
+                            placeholder="Enter OTP"
+                        >
+                    </div>
+
+                    <button class="btn btn-primary w-100">
+                        Verify OTP
+                    </button>
+
+                </form>
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<%- include('./partials/footer') %>
+<%- include('./partials/script') %>
+</body>
+</html>

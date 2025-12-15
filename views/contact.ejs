@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include('./partials/head') %>
+  <title>Contact Us | Blogify</title>
+
+  <style>
+    .contact-card {
+      border-radius: 16px;
+    }
+
+    .contact-icon {
+      font-size: 28px;
+    }
+
+    .contact-box {
+      border: 1px solid #eee;
+      border-radius: 12px;
+      padding: 18px;
+      background: #fafafa;
+      transition: 0.2s ease;
+    }
+
+    .contact-box:hover {
+      box-shadow: 0 8px 18px rgba(0,0,0,0.06);
+      transform: translateY(-2px);
+    }
+  </style>
+</head>
+
+<body>
+
+<%- include('./partials/nav') %>
+
+<div class="main-content">
+  <div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="text-center mb-5">
+      <h2 class="fw-bold">Contact Us</h2>
+      <p class="text-muted">
+        We'd love to hear from you. Reach out anytime 📩
+      </p>
+    </div>
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+
+        <div class="card shadow-sm border-0 contact-card">
+          <div class="card-body p-4">
+
+            <!-- INFO -->
+            <div class="row g-4">
+
+              <!-- EMAIL -->
+              <div class="col-md-6">
+                <div class="contact-box text-center h-100">
+                  <div class="contact-icon mb-2">📧</div>
+                  <h5 class="fw-semibold">Email</h5>
+                  <p class="text-muted mb-1">
+                    For queries & support
+                  </p>
+                  <a
+                    href="mailto:kushwahaharsh98@gmail.com"
+                    class="fw-semibold text-decoration-none"
+                  >
+                    kushwahaharsh98@gmail.com
+                  </a>
+                </div>
+              </div>
+
+              <!-- SUPPORT -->
+              <div class="col-md-6">
+                <div class="contact-box text-center h-100">
+                  <div class="contact-icon mb-2">💬</div>
+                  <h5 class="fw-semibold">Support</h5>
+                  <p class="text-muted mb-1">
+                    Premium & account help
+                  </p>
+                  <span class="fw-semibold">
+                    Available via email
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- FOOTER TEXT -->
+            <div class="text-center mt-4">
+              <p class="text-muted mb-0">
+                We usually respond within <strong>24 hours</strong>
+              </p>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<%- include("./partials/footer") %>
+<%- include('./partials/script') %>
+
+</body>
+</html>

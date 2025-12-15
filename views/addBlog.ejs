@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/image@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/list@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@latest"></script>
+<script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@latest"></script>
+    <title>Add Blog</title>
+</head>
+<body>
+    <%- include('./partials/nav') %>
+
+    <!-- ✅ MAIN CONTENT WRAPPER (ONLY ADDITION) -->
+    <div class="main-content">
+        <div class="container mt-3">
+            <form action="/blog" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                    <label for="coverImage" class="form-label">Upload Image</label>
+                    <input class="form-control" type="file" id="coverImage" name="coverImage" accept="image/*">
+                </div>
+
+                <div class="mb-3">
+                    <label for="title" class="form-label">Blog Title</label>
+                    <input
+                        type="text"
+                        class="form-control"
+                        placeholder="<----Blog Title goes here----->"
+                        id="title"
+                        name="title"
+                        aria-describedby="title"
+                    >
+                </div>
+
+                <div class="mb-3">
+                    <label for="body" class="form-label">Blog Description</label>
+                    <textarea
+                        class="form-control"
+                        name="body"
+                        placeholder="<----Blog Description goes here----->"
+                        id="body"
+                    ></textarea>
+                </div>
+
+                <div class="mb-3">
+                    <button class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- ✅ END MAIN CONTENT -->
+
+    <%- include("./partials/footer") %>
+    <%- include('./partials/script') %>
+</body>
+</html>

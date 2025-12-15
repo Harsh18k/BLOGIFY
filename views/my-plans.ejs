@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <%- include('./partials/head') %>
+  <title>My Plan | Blogify</title>
+
+  <style>
+    .plan-card {
+      border-radius: 16px;
+    }
+
+    .plan-badge {
+      font-size: 14px;
+      letter-spacing: 0.3px;
+    }
+
+    .info-box {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 14px 16px;
+      height: 100%;
+      position: relative;
+    }
+
+    .info-label {
+      font-size: 12px;
+      color: #6c757d;
+      text-transform: uppercase;
+      letter-spacing: 0.4px;
+    }
+
+    .info-value {
+      font-weight: 600;
+      margin-top: 4px;
+    }
+
+    .divider {
+      border-top: 1px dashed #dee2e6;
+      margin: 24px 0;
+    }
+
+    .days-left-badge {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      font-size: 11px;
+      background: #fff3cd;
+      color: #856404;
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-weight: 600;
+    }
+
+    .action-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+    }
+
+    .action-left {
+      display: flex;
+      gap: 12px;
+    }
+
+    .action-bar .btn {
+      height: 42px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-dialog-top {
+      margin-top: 60px;
+    }
+  </style>
+</head>
+
+<body>
+
+<%- include('./partials/nav') %>
+
+<div class="main-content">
+  <div class="container mt-5">
+
+    <div class="row justify-content-center">
+      <div class="col-lg-8 col-md-10">
+
+        <div class="card shadow-sm border-0 plan-card">
+          <div class="card-body p-4 p-md-5">
+
+            <h4 class="fw-bold text-center mb-4">My Subscription</h4>
+
+            <% if (user.isPremium) { %>
+
+              <div class="text-center mb-4">
+                <span class="badge bg-success plan-badge px-4 py-2">
+                  ⭐ Premium Active
+                </span>
+              </div>
+
+              <div class="row g-3">
+
+                <div class="col-md-6">
+                  <div class="info-box">
+                    <div class="info-label">Plan</div>
+                    <div class="info-value"><%= user.planName %></div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="info-box">
+                    <div class="info-label">Amount Paid</div>
+                    <div class="info-value">₹<%= user.planAmount %></div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="info-box">
+                    <div class="info-label">Purchased On</div>
+                    <div class="info-value">
+                      <%= new Date(user.premiumSince).toDateString() %>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="info-box">
+                    <% 
+                      const now = new Date();
+                      const expiry = new Date(user.planExpiryAt);
+                      const daysLeft = Math.max(
+                        Math.ceil((expiry - now) / (1000 * 60 * 60 * 24)),
+                        0
+                      );
+                    %>
+
+                    <div class="days-left-badge">
+                      <%= daysLeft %> days left
+                    </div>
+
+                    <div class="info-label">Valid Till</div>
+                    <div class="info-value">
+                      <%= expiry.toDateString() %>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+
+              <div class="divider"></div>
+
+              <div class="info-box">
+                <div class="info-label">Payment ID</div>
+                <div class="info-value text-break">
+                  <%= user.paymentId %>
+                </div>
+              </div>
+
+              <!-- ACTION BAR -->
+              <div class="action-bar">
+
+                <div class="action-left">
+                  <a href="/invoices/latest" class="btn btn-primary px-4">
+                    Download Invoice
+                  </a>
+
+                  <a href="/contact" class="btn btn-outline-secondary px-4">
+                    Need Help?
+                  </a>
+                </div>
+
+                <button
+                  class="btn btn-outline-danger px-4"
+                  data-bs-toggle="modal"
+                  data-bs-target="#cancelSubscriptionModal">
+                  Cancel Subscription
+                </button>
+
+              </div>
+
+            <% } else { %>
+
+              <div class="text-center py-4">
+                <h5 class="fw-semibold mb-2">No Active Subscription</h5>
+                <p class="text-muted mb-4">
+                  Upgrade to premium and unlock all features 🚀
+                </p>
+
+                <a href="/pricing" class="btn btn-warning px-5">
+                  ⭐ Go Premium
+                </a>
+              </div>
+
+            <% } %>
+
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CANCEL SUBSCRIPTION MODAL -->
+<div class="modal fade" id="cancelSubscriptionModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-sm modal-dialog-top">
+    <div class="modal-content border-0 shadow">
+
+      <div class="modal-header border-0">
+        <h5 class="modal-title fw-bold text-danger">
+          Cancel Subscription?
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body text-center">
+        <p class="text-muted mb-3">
+          Your premium access will be cancelled immediately.<br>
+          This action <strong>cannot be undone</strong>.
+        </p>
+
+        <p class="small text-muted">
+          A confirmation email will be sent to<br>
+          <strong><%= user.email %></strong>
+        </p>
+      </div>
+
+      <div class="modal-footer border-0 d-flex justify-content-center gap-2">
+
+        <button type="button"
+                class="btn btn-outline-secondary px-4"
+                data-bs-dismiss="modal">
+          Keep Subscription
+        </button>
+
+        <form action="/subscription/cancel" method="POST">
+          <button type="submit" class="btn btn-danger px-4">
+            Yes, Cancel
+          </button>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<%- include("./partials/footer") %>
+<%- include('./partials/script') %>
+</body>
+</html>

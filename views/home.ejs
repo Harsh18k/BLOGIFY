@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <%- include('./partials/head') %>
+    <title>Blogify</title>
+
+    <style>
+        /* Clean card text trimming */
+        .card-text-trim {
+            max-height: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .blog-image {
+            height: 180px;
+            object-fit: cover;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('./partials/nav') %>
+
+    <!-- ✅ MAIN CONTENT WRAPPER (ONLY ADDITION) -->
+    <div class="main-content">
+        <div class="container mt-4">
+
+            <!-- 4 cards per row on large screens -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+
+                <% blogs.forEach(blog => { %>
+
+                    <div class="col">
+                        <div class="card h-100 shadow-sm">
+
+                            <!-- Fixed-size image -->
+                            <img src="<%= blog.coverImageURL %>" 
+                                 class="card-img-top blog-image" 
+                                 alt="Blog Cover">
+
+                            <div class="card-body d-flex flex-column">
+
+                                <!-- Full title -->
+                                <h5 class="card-title"><%= blog.title %></h5>
+
+                                <!-- Trimmed content -->
+                                <p class="card-text card-text-trim"><%= blog.body %></p>
+
+                                <!-- Button stays bottom -->
+                                <a href="/blog/<%= blog._id %>" 
+                                   class="btn btn-primary mt-auto w-100">
+                                   Read More
+                                </a>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                <% }) %>
+
+            </div>
+
+        </div>
+    </div>
+    <!-- ✅ END MAIN CONTENT -->
+
+    <%- include("./partials/footer") %>
+    <%- include('./partials/script') %>
+</body>
+</html>
