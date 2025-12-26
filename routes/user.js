@@ -170,7 +170,7 @@ router.post("/forgot-password", async (req, res) => {
     user.resetOTPAttempts = 0;
     await user.save();
 
-    // ✅ Styled email send
+    // Styled email send
     await sendForgotPasswordOtp(email, user.fullName || "User", otp);
 
     res.redirect(`/user/verify-otp?email=${email}`);
@@ -189,13 +189,13 @@ router.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    // 1️⃣ Basic validation
+    // Basic validation
     if (!email || !otp) {
       res.cookie("errorMessage", "Invalid request");
       return res.redirect("/user/forgot-password");
     }
 
-    // 2️⃣ Find user
+    // Find user
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -203,7 +203,7 @@ router.post("/verify-otp", async (req, res) => {
       return res.redirect("/user/forgot-password");
     }
 
-    // 3️⃣ Google user protection
+    //  Google user protection
     if (user.googleId) {
       res.cookie(
         "errorMessage",
@@ -224,13 +224,13 @@ router.post("/verify-otp", async (req, res) => {
       return res.redirect(`/user/verify-otp?email=${email}`);
     }
 
-    // 5️⃣ OTP expiry check
+    // OTP expiry check
     if (user.resetOTPExpiry < Date.now()) {
       res.cookie("errorMessage", "OTP expired. Please request again.");
       return res.redirect("/user/forgot-password");
     }
 
-    // 6️⃣ OTP verified → allow password reset
+    //  OTP verified → allow password reset
     user.resetOTPAttempts = 0;
     await user.save();
     res.redirect(`/user/reset-password?email=${email}`);
@@ -249,13 +249,13 @@ router.post("/reset-password", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // 1️⃣ Basic validation
+    //  Basic validation
     if (!email || !password) {
       res.cookie("errorMessage", "Invalid request");
       return res.redirect("/user/forgot-password");
     }
 
-    // 2️⃣ Find user
+    //  Find user
     const user = await User.findOne({ email });
 
     if (!user) {
@@ -263,7 +263,7 @@ router.post("/reset-password", async (req, res) => {
       return res.redirect("/user/forgot-password");
     }
 
-    // 3️⃣ Google user protection
+    //  Google user protection
     if (user.googleId) {
       res.cookie(
         "errorMessage",
@@ -272,15 +272,15 @@ router.post("/reset-password", async (req, res) => {
       return res.redirect("/user/signin");
     }
 
-    // 4️⃣ Set new password
+    //  Set new password
     user.password = password;
 
-    // 5️⃣ Clear OTP fields
+    //  Clear OTP fields
     user.resetOTP = undefined;
     user.resetOTPExpiry = undefined;
     user.resetOTPAttempts = 0;
 
-    // 6️⃣ Save user (bcrypt will hash password)
+    // save user (bcrypt will hash password)
     await user.save();
 
     // 7️⃣ Success → signin

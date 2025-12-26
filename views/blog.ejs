@@ -1,190 +1,423 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <%- include("./partials/head") %>
-    <title><%= blog.title %></title>
+  <%- include("./partials/head") %>
+  <title><%= blog.title %> | Blogify</title>
 
-    <style>
-        .blog-content {
-            font-size: 1.2rem;
-            line-height: 1.9;
-        }
+  <style>
+    body {
+      background: #f5f7fb;
+    }
 
-        .half-screen {
-            height: calc(100vh - 90px);
-            overflow-y: auto;
-            padding-right: 15px;
-        }
+    /* ========= PAGE ========= */
+    .page {
+      width: 100%;
+      padding: 16px 48px 100px;
+    }
 
-        .cover-image {
-            border-radius: 15px;
-            box-shadow: rgba(0, 0, 0, 0.15) 0 6px 18px;
-            width: 100%;
-            max-height: 350px;
-            object-fit: cover;
-        }
+    /* ========= TITLE ========= */
+    .blog-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.12;
+      color: #0f172a;
+      margin: 6px 0 10px;
+      max-width: 1600px;
+    }
 
-        .comment-card {
-            background: #f9f9f9;
-            padding: 12px 15px;
-            border-radius: 12px;
-            box-shadow: rgba(0, 0, 0, 0.04) 0px 2px 6px;
-        }
+    /* ========= AUTHOR ========= */
+    .author-inline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 22px;
+    }
 
-        .comment-input-card {
-            background: #ffffff;
-            padding: 15px;
-            border-radius: 12px;
-            box-shadow: rgba(0,0,0,0.05) 0px 3px 10px;
-        }
+    .author-inline img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
 
-        .author-box {
-            background: #f8f9fa;
-            padding: 12px 15px;
-            border-radius: 12px;
-            box-shadow: rgba(0,0,0,0.06) 0px 3px 10px;
-        }
+    .author-inline b {
+      color: #111827;
+      font-weight: 600;
+    }
 
-        .author-img {
-            width: 55px;
-            height: 55px;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-    </style>
+    /* ========= COVER ========= */
+    .cover {
+      width: calc(100% - 24px);
+      height: 460px;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+      margin-bottom: 34px;
+    }
+
+    .cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* ========= CONTENT ========= */
+    .content {
+      width: 100%;
+      max-width: 1600px;
+      font-size: 1.2rem;
+      line-height: 1.9;
+      color: #1e293b;
+    }
+
+    .content h2 {
+      margin-top: 34px;
+      font-size: 2.05rem;
+      font-weight: 700;
+    }
+
+    .content h3 {
+      margin-top: 26px;
+      font-size: 1.55rem;
+      font-weight: 600;
+    }
+
+    .content p {
+      margin: 14px 0;
+    }
+
+    .content ul {
+      padding-left: 28px;
+    }
+
+    .content blockquote {
+      border-left: 4px solid #6366f1;
+      background: #eef2ff;
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin: 22px 0;
+    }
+
+    .content pre {
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 18px;
+      border-radius: 14px;
+      margin: 24px 0;
+      overflow-x: auto;
+    }
+
+    /* ===== EXTRA BLOCKS ===== */
+    .content-image {
+      margin: 26px 0;
+    }
+
+    .content-image img {
+      width: 100%;
+      border-radius: 16px;
+    }
+
+    .content-image p {
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 6px;
+    }
+
+    .embed iframe {
+      width: 100%;
+      min-height: 420px;
+      border-radius: 16px;
+      margin: 24px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    table th, table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e5e7eb;
+      text-align: left;
+    }
+
+    table th {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .checklist-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    /* ========= COMMENT TOGGLE ========= */
+    .comment-toggle {
+      position: fixed;
+      top: 50%;
+      right: 6px;
+      transform: translateY(-50%);
+      background: linear-gradient(135deg,#6366f1,#4f46e5);
+      color: #fff;
+      padding: 14px 10px;
+      border-radius: 14px;
+      writing-mode: vertical-rl;
+      font-weight: 700;
+      cursor: pointer;
+      z-index: 1000;
+      box-shadow: 0 10px 26px rgba(79,70,229,0.5);
+    }
+
+    /* ========= COMMENT PANEL ========= */
+    .comment-panel {
+      position: fixed;
+      top: 0;
+      right: -460px;
+      width: 440px;
+      height: 100vh;
+      background: #f8fafc;
+      box-shadow: -12px 0 40px rgba(0,0,0,0.25);
+      transition: right 0.4s ease;
+      z-index: 1100;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .comment-panel.open {
+      right: 0;
+    }
+
+    .comment-header {
+      padding: 16px 20px;
+      background: #fff;
+      border-bottom: 1px solid #e5e7eb;
+      display: flex;
+      justify-content: space-between;
+      font-weight: 700;
+    }
+
+    .comment-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+
+    .comment-card {
+      display: flex;
+      gap: 12px;
+      background: #fff;
+      padding: 14px;
+      border-radius: 14px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+      margin-bottom: 16px;
+    }
+
+    .comment-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .comment-input {
+      background: #fff;
+      padding: 16px;
+      border-radius: 16px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.08);
+      margin-bottom: 18px;
+    }
+  </style>
 </head>
 
 <body>
-    <%- include("./partials/nav") %>
 
-    <!-- ✅ MAIN CONTENT WRAPPER (ONLY ADDITION) -->
-    <div class="main-content">
-        <div class="container mt-4" style="max-width: 1300px;">
-            <div class="row">
+<%- include("./partials/nav") %>
 
-                <!-- ===========================================================
-                     LEFT HALF — IMAGE + COMMENT FORM + COMMENT LIST
-                ============================================================ -->
-                <div class="col-md-6 half-screen">
+<div class="page">
 
-                    <!-- Blog Cover Image -->
-                    <% if (blog.coverImageURL) { %>
-                        <img src="<%= blog.coverImageURL %>" class="cover-image mb-4" alt="Blog Image">
-                    <% } %>
+  <h1 class="blog-title"><%= blog.title %></h1>
 
-                    <!-- COMMENT SECTION -->
-                    <h3 class="fw-bold mb-3">Comments (<%= comments.length %>)</h3>
-
-                    <!-- COMMENT INPUT (TOP) -->
-                    <% if (locals.user) { %>
-                    <div class="comment-input-card mb-4">
-                        <div class="d-flex">
-
-                            <!-- Logged User Image -->
-                            <img src="<%= user.profileImageURL %>"
-                                 class="rounded-circle me-3"
-                                 style="width: 45px; height: 45px; object-fit: cover;">
-
-                            <form action="/blog/comment/<%= blog._id %>" method="post" style="width:100%;">
-                                <textarea name="content"
-                                    rows="2"
-                                    class="form-control mb-2"
-                                    placeholder="Write a comment..."
-                                    required
-                                    style="resize:none;"></textarea>
-
-                                <div class="text-end">
-                                    <button class="btn btn-primary btn-sm px-3">Post Comment</button>
-                                </div>
-                            </form>
-
-                        </div>
-                    </div>
-                    <% } %>
-
-                    <!-- COMMENT LIST -->
-                    <div>
-                        <% if (comments.length === 0) { %>
-                            <p class="text-muted">No comments yet. Be the first!</p>
-                        <% } %>
-
-                        <% comments.forEach(comment => { %>
-                            <div class="comment-card mb-3">
-                                <div class="d-flex">
-
-                                    <!-- Comment User Image -->
-                                    <img src="<%= comment.CREATED_BY?.profileImageURL || '/images/default-profile.png' %>"
-                                         class="rounded-circle me-3"
-                                         style="width: 40px; height: 40px; object-fit: cover;">
-
-                                    <div>
-                                        <b><%= comment.CREATED_BY?.fullName || "User" %></b>
-                                        <p class="mb-1"><%= comment.content %></p>
-                                    </div>
-
-                                </div>
-                            </div>
-                        <% }) %>
-                    </div>
-
-                </div>
-
-                <!-- ===========================================================
-                     RIGHT HALF — BLOG CONTENT + PUBLISHER WITH IMAGE
-                ============================================================ -->
-                <div class="col-md-6 half-screen">
-
-                    <!-- Blog Title -->
-                    <h1 class="fw-bold mb-4" style="font-size: 2.4rem;"><%= blog.title %></h1>
-
-                    <!-- Author Box -->
-                    <div class="author-box d-flex align-items-center mb-4">
-
-                        <img src="<%= blog.CREATED_BY?.profileImageURL || '/images/default-profile.png' %>"
-                             class="author-img me-3 shadow-sm">
-
-                        <div>
-                            <div class="fw-bold" style="font-size: 1.1rem;">
-                                <%= blog.CREATED_BY?.fullName || "Unknown Author" %>
-                            </div>
-
-                            <div class="text-muted" style="font-size: 0.9rem;">
-                                Published on <%= blog.createdAt.toDateString() %>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Blog Content -->
-                    <div class="blog-content mt-3">
-                        <%= blog.body %>
-                    </div>
-
-                    <!-- Tags -->
-                    <% if (blog.tags && blog.tags.length > 0) { %>
-                        <div class="mt-4">
-                            <% blog.tags.forEach(tag => { %>
-                                <span class="badge bg-dark me-2 px-3 py-2" style="border-radius: 20px;">
-                                    #<%= tag %>
-                                </span>
-                            <% }) %>
-                        </div>
-                    <% } %>
-
-                    <!-- Back Button -->
-                    <div class="mt-5">
-                        <a href="/" class="btn btn-outline-primary px-4">← Back to Home</a>
-                    </div>
-
-                </div>
-
-            </div>
-        </div>
+  <div class="author-inline">
+    <img src="<%= blog.CREATED_BY?.profileImageURL || '/image/default.png' %>">
+    <div>
+      <b><%= blog.CREATED_BY?.fullName %></b>
+      · <%= blog.createdAt.toDateString() %>
+      · <%= blog.readTime || 10 %> min read
     </div>
-    <!-- ✅ END MAIN CONTENT -->
+  </div>
 
-    <%- include("./partials/footer") %>
-    <%- include("./partials/script") %>
+  <% if (blog.coverImageURL) { %>
+    <div class="cover">
+      <img src="<%= blog.coverImageURL %>">
+    </div>
+  <% } %>
+
+  <div id="blogContent" class="content"></div>
+</div>
+
+<!-- COMMENT TOGGLE -->
+<div class="comment-toggle" onclick="toggleComments()">
+  Comments (<%= comments.length %>)
+</div>
+
+<!-- COMMENT PANEL -->
+<div id="commentPanel" class="comment-panel">
+  <div class="comment-header">
+    <span>Comments</span>
+    <button class="btn btn-sm btn-outline-secondary" onclick="toggleComments()">✕</button>
+  </div>
+
+  <div class="comment-body">
+
+    <% if (user) { %>
+      <div class="comment-input">
+        <form action="/blog/comment/<%= blog._id %>" method="post">
+          <textarea name="content" class="form-control mb-2" rows="2"
+            placeholder="Write a comment..." required></textarea>
+          <button class="btn btn-primary btn-sm w-100">Post</button>
+        </form>
+      </div>
+    <% } %>
+
+    <% comments.forEach(c => { %>
+      <div class="comment-card">
+        <img src="<%= c.CREATED_BY?.profileImageURL || '/image/default.png' %>" class="comment-avatar">
+        <div>
+          <b><%= c.CREATED_BY?.fullName || "User" %></b><br>
+          <span style="font-size:12px;color:#6b7280"><%= c.createdAt.toDateString() %></span>
+          <p class="mb-0"><%= c.content %></p>
+        </div>
+      </div>
+    <% }) %>
+
+  </div>
+</div>
+
+<%- include("./partials/footer") %>
+<%- include("./partials/script") %>
+
+<script>
+  const data = <%- JSON.stringify(blog.content || {}) %>;
+  const container = document.getElementById("blogContent");
+
+  if (data.blocks) {
+    data.blocks.forEach(block => {
+
+      switch (block.type) {
+
+        case "header": {
+          const h = document.createElement("h" + block.data.level);
+          h.innerText = block.data.text;
+          container.appendChild(h);
+          break;
+        }
+
+        case "paragraph": {
+          const p = document.createElement("p");
+          p.innerHTML = block.data.text;
+          container.appendChild(p);
+          break;
+        }
+
+        case "list": {
+          const ul = document.createElement("ul");
+          block.data.items.forEach(i => {
+            const li = document.createElement("li");
+            li.innerHTML = i;
+            ul.appendChild(li);
+          });
+          container.appendChild(ul);
+          break;
+        }
+
+        case "quote": {
+          const q = document.createElement("blockquote");
+          q.innerHTML = block.data.text;
+          container.appendChild(q);
+          break;
+        }
+
+        case "code": {
+          const pre = document.createElement("pre");
+          pre.innerText = block.data.code;
+          container.appendChild(pre);
+          break;
+        }
+
+        case "delimiter":
+          container.appendChild(document.createElement("hr"));
+          break;
+
+        case "image": {
+          const wrap = document.createElement("div");
+          wrap.className = "content-image";
+          const img = document.createElement("img");
+          img.src = block.data.file.url;
+          wrap.appendChild(img);
+          if (block.data.caption) {
+            const cap = document.createElement("p");
+            cap.innerText = block.data.caption;
+            wrap.appendChild(cap);
+          }
+          container.appendChild(wrap);
+          break;
+        }
+
+        case "embed": {
+          const div = document.createElement("div");
+          div.className = "embed";
+          div.innerHTML = block.data.embed;
+          container.appendChild(div);
+          break;
+        }
+
+        case "table": {
+          const table = document.createElement("table");
+          block.data.content.forEach((row, i) => {
+            const tr = document.createElement("tr");
+            row.forEach(cell => {
+              const el = document.createElement(i === 0 ? "th" : "td");
+              el.innerText = cell;
+              tr.appendChild(el);
+            });
+            table.appendChild(tr);
+          });
+          container.appendChild(table);
+          break;
+        }
+
+        case "checklist": {
+          block.data.items.forEach(item => {
+            const row = document.createElement("div");
+            row.className = "checklist-item";
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.checked = item.checked;
+            cb.disabled = true;
+            const label = document.createElement("span");
+            label.innerHTML = item.text;
+            row.appendChild(cb);
+            row.appendChild(label);
+            container.appendChild(row);
+          });
+          break;
+        }
+      }
+    });
+  }
+
+  function toggleComments() {
+    document.getElementById("commentPanel").classList.toggle("open");
+  }
+</script>
+
 </body>
-
 </html>
