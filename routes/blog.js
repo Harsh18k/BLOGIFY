@@ -4,6 +4,7 @@ const upload = require("../config/multer");
 
 const Blog = require("../models/blog");
 const Comment = require("../models/comment");
+const user = require("../models/user");
 
 const router = Router();
 
@@ -30,6 +31,15 @@ router.post(
       });
     }
   );
+
+  // =================================
+  // PREVIEW Route
+  // =================================
+  router.get("/preview", (req,res)=>{
+    return res.render("blogPreview", {
+      user :req.user,
+    });
+  });
 
 /* ===============================
    SINGLE BLOG PAGE

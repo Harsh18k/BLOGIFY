@@ -28,6 +28,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
+      gap: 10px;
     }
 
     .editor-topbar h4 {
@@ -48,7 +49,7 @@
       width: 100%;
     }
 
-    /* COVER IMAGE DROPZONE */
+    /* COVER IMAGE */
     .cover-dropzone {
       background: #ffffff;
       border: 2px dashed #d1d5db;
@@ -56,9 +57,7 @@
       padding: 28px;
       text-align: center;
       cursor: pointer;
-      transition: 0.2s ease;
       margin-bottom: 20px;
-      position: relative;
     }
 
     .cover-dropzone:hover {
@@ -71,10 +70,6 @@
       font-size: 15px;
     }
 
-    .cover-text strong {
-      color: #111827;
-    }
-
     .cover-preview {
       display: none;
       margin-top: 12px;
@@ -85,9 +80,7 @@
       border-radius: 12px;
     }
 
-    .cover-input {
-      display: none;
-    }
+    .cover-input { display: none; }
 
     /* TITLE */
     .blog-title-input {
@@ -98,10 +91,6 @@
       background: transparent;
       margin: 20px 0;
       width: 100%;
-    }
-
-    .blog-title-input::placeholder {
-      color: #9ca3af;
     }
 
     /* EDITOR */
@@ -127,19 +116,8 @@
       padding: 10px 14px;
       border-radius: 8px;
       font-size: 14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
       animation: pulse 1.8s infinite;
       z-index: 20;
-    }
-
-    .editor-hint::after {
-      content: "";
-      position: absolute;
-      left: -6px;
-      top: 12px;
-      border-width: 6px;
-      border-style: solid;
-      border-color: transparent #111827 transparent transparent;
     }
 
     @keyframes pulse {
@@ -148,22 +126,10 @@
       100% { transform: scale(1); opacity: 0.9; }
     }
 
-    footer {
-      margin-top: auto;
-    }
-
     @media (max-width: 768px) {
-      .editor-main {
-        padding: 16px;
-      }
-
-      #editorjs {
-        padding: 20px;
-      }
-
-      .editor-hint {
-        display: none;
-      }
+      .editor-main { padding: 16px; }
+      #editorjs { padding: 20px; }
+      .editor-hint { display: none; }
     }
   </style>
 </head>
@@ -177,15 +143,19 @@
   <!-- TOP BAR -->
   <div class="editor-topbar">
     <h4>✍️ Write a New Blog</h4>
-    <button type="submit" form="blogForm" class="btn btn-primary">
-      Publish
-    </button>
+    <div>
+      <button type="button" id="previewBtn" class="btn btn-outline-secondary me-2">
+        Preview
+      </button>
+      <button type="submit" form="blogForm" class="btn btn-primary">
+        Publish
+      </button>
+    </div>
   </div>
 
   <!-- MAIN -->
   <div class="editor-main">
 
-    <!-- MAGIC HELPER -->
     <div id="editorHint" class="editor-hint">
       Click <strong>+</strong> or type <strong>/</strong><br>
       to add headings, images, code & more ✨
@@ -196,28 +166,19 @@
       <!-- COVER IMAGE -->
       <label class="cover-dropzone">
         <input type="file" name="coverImage" class="cover-input" accept="image/*" id="coverInput">
-
         <div class="cover-text">
           🖼️ <strong>Cover Image</strong><br>
-          Click to upload a cover image<br>
-          <small>(Recommended: 1600×900)</small>
+          Click to upload a cover image
         </div>
-
         <div class="cover-preview" id="coverPreview"></div>
       </label>
 
       <!-- TITLE -->
-      <input
-        type="text"
-        name="title"
-        class="blog-title-input"
-        placeholder="Enter your blog title..."
-        required
-      >
+      <input type="text" name="title" class="blog-title-input"
+        placeholder="Enter your blog title..." required>
 
       <!-- EDITOR -->
       <div id="editorjs"></div>
-
       <input type="hidden" name="content" id="content">
     </form>
   </div>
@@ -225,7 +186,7 @@
   <%- include('./partials/footer') %>
 </div>
 
-<!-- ================= EDITOR.JS ================= -->
+<!-- EDITOR.JS -->
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.30.2"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.9.0"></script>
@@ -233,8 +194,6 @@
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@2.9.0"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@1.3.0"></script>
-
-<!-- 🔥 FULL FEATURE TOOLS -->
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@2.8.1"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@2.5.3"></script>
 <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@2.3.0"></script>
@@ -248,107 +207,62 @@
     holder: 'editorjs',
     placeholder: 'Start writing your story...',
     tools: {
-
-      header: {
-        class: Header,
-        inlineToolbar: true,
-        config: {
-          levels: [2, 3, 4],
-          defaultLevel: 2
-        }
-      },
-
-      paragraph: {
-        class: Paragraph,
-        inlineToolbar: true
-      },
-
-      list: {
-        class: List,
-        inlineToolbar: true
-      },
-
-      quote: {
-        class: Quote,
-        inlineToolbar: true
-      },
-
+      header: { class: Header, inlineToolbar: true },
+      paragraph: { class: Paragraph, inlineToolbar: true },
+      list: { class: List, inlineToolbar: true },
+      quote: { class: Quote, inlineToolbar: true },
       code: CodeTool,
-
       delimiter: Delimiter,
-
       checklist: Checklist,
-
       inlineCode: InlineCode,
-
       marker: Marker,
-
-      table: {
-        class: Table,
-        inlineToolbar: true
-      },
-
-      embed: {
-        class: Embed,
-        config: {
-          services: {
-            youtube: true,
-            twitter: true,
-            instagram: true,
-            codepen: true
-          }
-        }
-      },
-
-      linkTool: {
-        class: LinkTool,
-        config: {
-          endpoint: '/blog/fetch-link-preview'
-        }
-      },
-
-      image: {
-        class: ImageTool,
-        config: {
-          endpoints: {
-            byFile: '/blog/upload-image'
-          }
-        }
-      }
+      table: { class: Table, inlineToolbar: true },
+      embed: { class: Embed },
+      linkTool: { class: LinkTool, config: { endpoint: '/blog/fetch-link-preview' } },
+      image: { class: ImageTool, config: { endpoints: { byFile: '/blog/upload-image' } } }
     }
   });
 
+  /* PUBLISH */
   document.getElementById("blogForm").addEventListener("submit", async (e) => {
     e.preventDefault();
-
     const data = await editor.save();
-
-    if (!data.blocks || data.blocks.length === 0) {
-      alert("Please write some content before publishing ✍️");
-      return;
-    }
-
+    if (!data.blocks.length) return alert("Write something first ✍️");
     document.getElementById("content").value = JSON.stringify(data);
     e.target.submit();
   });
 
-  /* COVER IMAGE PREVIEW */
+  /* COVER PREVIEW */
   const coverInput = document.getElementById("coverInput");
-  const preview = document.getElementById("coverPreview");
+  const coverPreview = document.getElementById("coverPreview");
 
   coverInput.addEventListener("change", () => {
     const file = coverInput.files[0];
     if (!file) return;
-
     const reader = new FileReader();
     reader.onload = () => {
-      preview.innerHTML = `<img src="${reader.result}" />`;
-      preview.style.display = "block";
+      coverPreview.innerHTML = `<img src="${reader.result}">`;
+      coverPreview.style.display = "block";
     };
     reader.readAsDataURL(file);
   });
 
-  /* AUTO HIDE MAGIC HINT */
+  /* PREVIEW */
+  document.getElementById("previewBtn").addEventListener("click", async () => {
+    const content = await editor.save();
+    if (!content.blocks.length) return alert("Write something first ✍️");
+
+    const title = document.querySelector(".blog-title-input").value || "Untitled Draft";
+    const cover = coverInput.files[0] ? URL.createObjectURL(coverInput.files[0]) : "";
+
+    sessionStorage.setItem(
+      "blogPreviewData",
+      JSON.stringify({ title, content, coverImageURL: cover })
+    );
+
+    window.open("/blog/preview", "_blank");
+  });
+
   setTimeout(() => {
     const hint = document.getElementById("editorHint");
     if (hint) hint.style.display = "none";

@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("./partials/head") %>
+  <title>Preview | Blogify</title>
+
+  <style>
+    body { background: #f5f7fb; }
+
+    .page { width: 100%; padding: 16px 48px 100px; }
+
+    .blog-title {
+      font-size: 3.5rem;
+      font-weight: 800;
+      line-height: 1.12;
+      color: #0f172a;
+      margin: 6px 0 10px;
+      max-width: 1600px;
+    }
+
+    .author-inline {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 22px;
+    }
+
+    .author-inline img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+
+    .author-inline b { color: #111827; }
+
+    .cover {
+      width: calc(100% - 24px);
+      height: 460px;
+      border-radius: 22px;
+      overflow: hidden;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.18);
+      margin-bottom: 34px;
+    }
+
+    .cover img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .content {
+      width: 100%;
+      max-width: 1600px;
+      font-size: 1.2rem;
+      line-height: 1.9;
+      color: #1e293b;
+    }
+
+    .content h2 { margin-top: 34px; font-size: 2.05rem; }
+    .content h3 { margin-top: 26px; font-size: 1.55rem; }
+    .content p { margin: 14px 0; }
+    .content ul { padding-left: 28px; }
+
+    .content blockquote {
+      border-left: 4px solid #6366f1;
+      background: #eef2ff;
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin: 22px 0;
+    }
+
+    .content pre {
+      background: #0f172a;
+      color: #e5e7eb;
+      padding: 18px;
+      border-radius: 14px;
+      margin: 24px 0;
+      overflow-x: auto;
+    }
+
+    .content-image { margin: 26px 0; }
+    .content-image img { width: 100%; border-radius: 16px; }
+    .content-image p { text-align: center; font-size: 14px; color: #6b7280; }
+
+    iframe {
+      width: 100%;
+      min-height: 420px;
+      border-radius: 16px;
+      margin: 24px 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+      background: #fff;
+      border-radius: 12px;
+    }
+
+    table th, table td {
+      padding: 12px 14px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    table th {
+      background: #f1f5f9;
+      font-weight: 600;
+    }
+
+    .checklist-item {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .preview-badge {
+      position: fixed;
+      top: 90px;
+      right: 20px;
+      background: #6366f1;
+      color: #fff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 700;
+      z-index: 1000;
+    }
+  </style>
+</head>
+
+<body>
+
+<%- include("./partials/nav") %>
+
+<div class="preview-badge">PREVIEW MODE</div>
+
+<div class="page">
+  <h1 id="title" class="blog-title"></h1>
+
+  <div class="author-inline">
+    <img src="<%= user?.profileImageURL || '/image/default.png' %>">
+    <div>
+      <b><%= user?.fullName || "Preview User" %></b>
+      · Preview
+    </div>
+  </div>
+
+  <div id="coverWrap"></div>
+  <div id="blogContent" class="content"></div>
+</div>
+
+<%- include("./partials/footer") %>
+
+<script>
+  const previewData = JSON.parse(sessionStorage.getItem("blogPreviewData"));
+
+  if (!previewData) {
+    document.body.innerHTML = "<h2 style='padding:40px'>No preview data found</h2>";
+    throw new Error("No preview data");
+  }
+
+  document.getElementById("title").innerText = previewData.title;
+
+  if (previewData.coverImageURL) {
+    document.getElementById("coverWrap").innerHTML = `
+      <div class="cover">
+        <img src="${previewData.coverImageURL}">
+      </div>
+    `;
+  }
+
+  const container = document.getElementById("blogContent");
+  const data = previewData.content;
+
+  data.blocks.forEach(block => {
+    switch (block.type) {
+
+      case "header":
+        const h = document.createElement("h" + block.data.level);
+        h.innerHTML = block.data.text;
+        container.appendChild(h);
+        break;
+
+      case "paragraph":
+        const p = document.createElement("p");
+        p.innerHTML = block.data.text;
+        container.appendChild(p);
+        break;
+
+      case "list":
+        const ul = document.createElement("ul");
+        block.data.items.forEach(i => {
+          const li = document.createElement("li");
+          li.innerHTML = i;
+          ul.appendChild(li);
+        });
+        container.appendChild(ul);
+        break;
+
+      case "quote":
+        const q = document.createElement("blockquote");
+        q.innerHTML = block.data.text;
+        container.appendChild(q);
+        break;
+
+      case "code":
+        const pre = document.createElement("pre");
+        pre.innerText = block.data.code;
+        container.appendChild(pre);
+        break;
+
+      case "image":
+        const wrap = document.createElement("div");
+        wrap.className = "content-image";
+        wrap.innerHTML = `<img src="${block.data.file.url}">`;
+        if (block.data.caption) wrap.innerHTML += `<p>${block.data.caption}</p>`;
+        container.appendChild(wrap);
+        break;
+
+      case "embed":
+        container.innerHTML += block.data.embed;
+        break;
+
+      case "table":
+        const table = document.createElement("table");
+        block.data.content.forEach((row, i) => {
+          const tr = document.createElement("tr");
+          row.forEach(cell => {
+            const el = document.createElement(i === 0 ? "th" : "td");
+            el.innerText = cell;
+            tr.appendChild(el);
+          });
+          table.appendChild(tr);
+        });
+        container.appendChild(table);
+        break;
+
+      case "checklist":
+        block.data.items.forEach(item => {
+          const row = document.createElement("div");
+          row.className = "checklist-item";
+          row.innerHTML = `
+            <input type="checkbox" disabled ${item.checked ? "checked" : ""}>
+            <span>${item.text}</span>
+          `;
+          container.appendChild(row);
+        });
+        break;
+    }
+  });
+</script>
+
+</body>
+</html>
