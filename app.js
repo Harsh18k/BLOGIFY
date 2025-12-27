@@ -113,11 +113,15 @@ app.get(
     res.redirect("/");
   }
 );
+// landing page 
+app.get("/", (req, res) => {
+  res.render("landing", { user: req.user });
+});
 
 /* -----------------------------
       HOME ROUTE
 ----------------------------- */
-app.get("/", async (req, res) => {
+app.get("/blogs", async (req, res) => {
   const blogs = await Blog.find({}).sort({ createdAt: -1 });
   res.render("home", {
     user: req.user,

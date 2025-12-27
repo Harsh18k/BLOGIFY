@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("./partials/head") %>
+  <title>Blogify – A Modern Blogging Platform</title>
+
+  <style>
+    body {
+      background: #f8fafc;
+      color: #0f172a;
+    }
+
+    /* ================= LAYOUT ================= */
+    .section {
+      padding: 96px 20px;
+    }
+
+    .container-narrow {
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .container-wide {
+      max-width: 1300px;
+      margin: auto;
+    }
+
+    /* ================= HERO ================= */
+    .hero {
+      padding: 120px 20px 80px;
+      text-align: center;
+      background:
+        linear-gradient(
+          rgba(248,250,252,0.94),
+          rgba(248,250,252,0.94)
+        ),
+        url("/image/hero-bg.png");
+      background-size: cover;
+      background-position: center;
+    }
+
+    .hero h1 {
+      font-size: 4rem;
+      font-weight: 900;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 span {
+      color: #4f46e5;
+    }
+
+    .hero p {
+      margin: 24px auto 0;
+      max-width: 720px;
+      font-size: 1.25rem;
+      line-height: 1.8;
+      color: #475569;
+    }
+
+    .hero-actions {
+      margin-top: 40px;
+    }
+
+    .hero-actions a {
+      margin: 8px;
+      padding: 16px 34px;
+      border-radius: 14px;
+      font-size: 1.05rem;
+      font-weight: 600;
+    }
+
+    /* ================= VALUE STRIP ================= */
+    .value-strip {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 32px;
+      margin-top: 80px;
+    }
+
+    .value {
+      text-align: center;
+    }
+
+    .value h4 {
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .value p {
+      color: #64748b;
+      font-size: 15px;
+      line-height: 1.6;
+    }
+
+    /* ================= FEATURES ================= */
+    .features {
+      background: #ffffff;
+    }
+
+    .features h2 {
+      font-size: 2.6rem;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 64px;
+    }
+
+    .feature-grid {
+      display: grid;
+      grid-template-columns: repeat(3,1fr);
+      gap: 32px;
+    }
+
+    .feature-card {
+      background: #f8fafc;
+      border-radius: 18px;
+      padding: 32px;
+      height: 100%;
+    }
+
+    .feature-card h4 {
+      font-weight: 800;
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      color: #475569;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    /* ================= FUTURE ================= */
+    .future {
+      text-align: center;
+    }
+
+    .future h2 {
+      font-size: 2.6rem;
+      font-weight: 900;
+    }
+
+    .future p {
+      max-width: 720px;
+      margin: 20px auto 0;
+      font-size: 1.15rem;
+      color: #475569;
+    }
+
+    .future-tags {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .future-tags span {
+      padding: 10px 16px;
+      background: #eef2ff;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 600;
+      color: #4338ca;
+    }
+
+    /* ================= CTA ================= */
+    .cta {
+      background: #0f172a;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .cta h2 {
+      font-size: 3rem;
+      font-weight: 900;
+    }
+
+    .cta p {
+      max-width: 680px;
+      margin: 20px auto;
+      font-size: 1.15rem;
+      color: #c7d2fe;
+    }
+
+    .cta a {
+      padding: 16px 36px;
+      border-radius: 14px;
+      font-weight: 700;
+      font-size: 1.05rem;
+    }
+
+    /* ================= RESPONSIVE ================= */
+    @media (max-width: 992px) {
+      .hero h1 {
+        font-size: 3rem;
+      }
+
+      .value-strip,
+      .feature-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<%- include("./partials/nav") %>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="container-narrow">
+    <h1>A modern platform for <span>writing & publishing</span></h1>
+    <p>
+      Blogify helps creators write clean blogs, publish effortlessly,
+      and grow with premium tools — without clutter.
+    </p>
+
+    <div class="hero-actions">
+      <a href="/blogs" class="btn btn-primary btn-lg">Explore Blogs</a>
+
+      <% if (user) { %>
+        <a href="/blog/add-new" class="btn btn-outline-dark btn-lg">Write a Blog</a>
+      <% } else { %>
+        <a href="/user/signin" class="btn btn-outline-dark btn-lg">Get Started</a>
+      <% } %>
+    </div>
+
+    <div class="value-strip">
+      <div class="value">
+        <h4>Writing Experience</h4>
+        <p>Editor.js powered writing experience focused on clarity.</p>
+      </div>
+      <div class="value">
+        <h4>Built-in Monetization</h4>
+        <p>Subscriptions, payments & invoices built-in.</p>
+      </div>
+      <div class="value">
+        <h4>Reliable Communication</h4>
+        <p>OTPs, payment alerts & account emails handled reliably.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="section features">
+  <div class="container-wide">
+    <h2>Built for creators, not clutter</h2>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <h4>Editor.js Content</h4>
+        <p>
+          Structured, block-based content that renders beautifully
+          on all devices.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h4>Authentication & Security</h4>
+        <p>
+          Google OAuth, OTP verification, secure sessions and roles.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <h4>Payments & Invoices</h4>
+        <p>
+          Razorpay powered subscriptions with automated invoices.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FUTURE -->
+<section class="section future">
+  <div class="container-narrow">
+    <h2>Designed to grow with you</h2>
+    <p>
+      Blogify is evolving — built today for features you’ll need tomorrow.
+    </p>
+
+    <div class="future-tags">
+      <span>AI Writing Assist</span>
+      <span>Creator Analytics</span>
+      <span>Public API</span>
+      <span>Custom Domains</span>
+      <span>Teams & Collaboration</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="section cta">
+  <div class="container-narrow">
+    <h2>Start writing with confidence</h2>
+    <p>
+      No noise. No distractions. Just a platform that respects creators.
+    </p>
+
+    <a href="/user/signin" class="btn btn-light btn-lg mt-3">
+      Join Blogify
+    </a>
+  </div>
+</section>
+
+<%- include("./partials/footer") %>
+<%- include("./partials/script") %>
+
+</body>
+</html>
