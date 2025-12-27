@@ -1,25 +1,13 @@
 const { Router } = require("express");
-const multer = require("multer");
-const path = require("path");
+
+const upload = require("../config/multer");
 
 const Blog = require("../models/blog");
 const Comment = require("../models/comment");
 
 const router = Router();
 
-/* ===============================
-   MULTER CONFIG (UNCHANGED)
-================================ */
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, path.resolve("./public/uploads"));
-  },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
 
-const upload = multer({ storage });
 
 /* ===============================
    ADD NEW BLOG PAGE
@@ -37,7 +25,7 @@ router.post(
       return res.json({
         success: 1,
         file: {
-          url: `/uploads/${req.file.filename}`,
+          url: req.file.path,
         },
       });
     }
@@ -91,7 +79,7 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
         content: JSON.parse(content), // 🔥 IMPORTANT
         CREATED_BY: req.user._id,
         coverImageURL: req.file
-          ? "/uploads/" + req.file.filename
+          ? req.file.path 
           : "/image/blog_default.jpg",
       });
   
