@@ -9,9 +9,11 @@ const blogRoute = require("./routes/blog");
 const paymentRoute = require("./routes/payment");
 const invoiceRoute = require("./routes/invoice");
 const subscriptionRoute = require("./routes/subscription");
+const dashboardRoutes = require("./routes/dashboard");
 
 const { checkAuthenticationCookie } = require("./middleware/authentication");
 const { generateToken } = require("./services/authentication");
+const addDraftCount = require("./middleware/addDraftCount");
 
 const Blog = require("./models/blog");
 
@@ -56,10 +58,15 @@ app.use(express.static(path.resolve("./public")));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
+
+
 /* -----------------------------
       JWT AUTH MIDDLEWARE
 ----------------------------- */
 app.use(checkAuthenticationCookie("token"));
+
+// count middleware 
+app.use(addDraftCount);
 
 /* -----------------------------
       EJS GLOBAL USER
@@ -122,7 +129,7 @@ app.get("/", (req, res) => {
       HOME ROUTE
 ----------------------------- */
 app.get("/blogs", async (req, res) => {
-  const blogs = await Blog.find({}).sort({ createdAt: -1 });
+  const blogs = await Blog.find({status:"PUBLISHED"}).populate("CREATED_BY").sort({ createdAt: -1 });
   res.render("home", {
     user: req.user,
     blogs,
@@ -141,6 +148,7 @@ app.get("/contact", (req, res) => {
 
 app.use("/", invoiceRoute);
 app.use("/subscription", subscriptionRoute);
+app.use("/dashboard", dashboardRoutes);
 
 /* -----------------------------
       SERVER START

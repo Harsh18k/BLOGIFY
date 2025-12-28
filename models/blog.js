@@ -36,6 +36,11 @@ const blogSchema = new Schema(
       ref: "User",
       required: true,
     },
+    status: {
+      type: String,
+      enum: ["DRAFT", "PUBLISHED", "DELETED"],
+      default: "PUBLISHED",
+    },
   },
   { timestamps: true }
 );
