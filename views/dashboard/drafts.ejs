@@ -1,220 +1,281 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include("../partials/head") %>
-  <title>Your Drafts | Blogify</title>
+    <title>Your Drafts | Blogify</title>
 
-  <style>
-    /* ===== GLOBAL LAYOUT (SAME AS HOME) ===== */
-    body {
-      background: #f8fafc;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    <style>
+      /* ===== GLOBAL LAYOUT (SAME AS HOME) ===== */
+      body {
+        background: #f8fafc;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .page-wrapper {
-      flex: 1;
-      padding-bottom: 60px;
-    }
+      .page-wrapper {
+        flex: 1;
+        padding-bottom: 60px;
+      }
 
-    .blog-container {
-      max-width: 1800px;
-      margin: auto;
-      padding: 0 16px;
-    }
+      .blog-container {
+        max-width: 1800px;
+        margin: auto;
+        padding: 0 16px;
+      }
 
-    /* ===== HEADER ===== */
-    .blogs-header h2 {
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 24px;
-    }
+      /* ===== HEADER ===== */
+      .blogs-header h2 {
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 24px;
+      }
 
-    /* ===== BLOG CARD (EXACT SAME AS HOME) ===== */
-    .blog-card {
-      background: #ffffff;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      transition: transform .15s ease;
-    }
+      /* ===== BLOG CARD (EXACT SAME AS HOME) ===== */
+      .blog-card {
+        background: #ffffff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: transform .15s ease;
+      }
 
-    .blog-card:hover {
-      transform: translateY(-4px);
-    }
+      .blog-card:hover {
+        transform: translateY(-4px);
+      }
 
-    .blog-image {
-      width: 100%;
-      height: 230px;
-      object-fit: cover;
-    }
+      .blog-image {
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+      }
 
-    .image-wrap {
-      position: relative;
-    }
+      .image-wrap {
+        position: relative;
+      }
 
-    /* ===== DRAFT BADGE ===== */
-    .draft-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      background: #f59e0b;
-      color: #fff;
-      font-size: 12px;
-      font-weight: 700;
-      padding: 4px 10px;
-      border-radius: 999px;
-    }
+      /* ===== DRAFT BADGE ===== */
+      .draft-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        background: #f59e0b;
+        color: #fff;
+        font-size: 12px;
+        font-weight: 700;
+        padding: 4px 10px;
+        border-radius: 999px;
+      }
 
-    .blog-body {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
+      .blog-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
 
-    .blog-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 6px;
-    }
+      .blog-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 6px;
+      }
 
-    .blog-desc {
-      font-size: 14px;
-      color: #475569;
-      line-height: 1.6;
-      max-height: 64px;
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
+      .blog-desc {
+        font-size: 14px;
+        color: #475569;
+        line-height: 1.6;
+        max-height: 64px;
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
 
-    .blog-divider {
-      height: 1px;
-      background: #e5e7eb;
-      margin: 12px 0;
-    }
+      .blog-divider {
+        height: 1px;
+        background: #e5e7eb;
+        margin: 12px 0;
+      }
 
-    .blog-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: auto;
-      gap: 10px;
-    }
+      .blog-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        gap: 10px;
+      }
 
-    .author-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #475569;
-      max-width: 75%;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      .author-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #475569;
+        max-width: 75%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-    .author-info img {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
-  </style>
+      .author-info img {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+    </style>
 </head>
 
 <body>
 
-<%- include("../partials/nav") %>
+  <%- include("../partials/nav") %>
 
-<div class="page-wrapper">
-  <div class="container-fluid mt-4">
-    <div class="blog-container">
+    <div class="page-wrapper">
+      <div class="container-fluid mt-4">
+        <div class="blog-container">
 
-      <!-- HEADER -->
-      <div class="blogs-header">
-        <h2>Your Drafts</h2>
-      </div>
-
-      <% if (drafts.length === 0) { %>
-        <div class="alert alert-light border">
-          You haven’t saved any drafts yet.
-        </div>
-      <% } %>
-
-      <!-- BLOG GRID (SAME GRID AS HOME) -->
-      <div class="row g-4">
-
-        <% drafts.forEach(blog => { %>
-          <div class="col-12 col-md-6 col-lg-4">
-
-            <div class="blog-card">
-
-              <!-- IMAGE -->
-              <div class="image-wrap">
-                <img
-                  src="<%= blog.coverImageURL %>"
-                  class="blog-image"
-                  alt="Draft cover"
-                >
-                <span class="draft-badge">Draft</span>
-              </div>
-
-              <div class="blog-body">
-
-                <!-- TITLE -->
-                <div class="blog-title">
-                  <%= blog.title || "Untitled Draft" %>
-                </div>
-
-                <!-- DESCRIPTION -->
-                <div class="blog-desc">
-                  <%= blog.content?.blocks?.find(b => b.type === "paragraph")?.data?.text || "" %>
-                </div>
-
-                <div class="blog-divider"></div>
-
-                <!-- FOOTER -->
-                <div class="blog-footer">
-
-                  <div class="author-info">
-                    <img src="<%= blog.CREATED_BY?.profileImageURL || '/image/default.png' %>">
-                    <span>
-                      <%= blog.CREATED_BY?.fullName %> ·
-                      <%= blog.updatedAt.toDateString() %>
-                    </span>
-                  </div>
-
-                  <div class="d-flex gap-2">
-                    <a href="/blog/edit/<%= blog._id %>" class="btn btn-outline-secondary btn-sm">
-                      Edit
-                    </a>
-                    <a href="/blog/publish/<%= blog._id %>" class="btn btn-primary btn-sm">
-                      Publish
-                    </a>
-                  </div>
-
-                </div>
-
-              </div>
-            </div>
-
+          <!-- HEADER -->
+          <div class="blogs-header">
+            <h2>Your Drafts</h2>
           </div>
-        <% }) %>
 
+          <% if (drafts.length===0) { %>
+            <div class="alert alert-light border">
+              You haven’t saved any drafts yet.
+            </div>
+            <% } %>
+
+              <!-- BLOG GRID (SAME GRID AS HOME) -->
+              <div class="row g-4">
+
+                <% drafts.forEach(blog=> { %>
+                  <div class="col-12 col-md-6 col-lg-4">
+
+                    <div class="blog-card">
+
+                      <!-- IMAGE -->
+                      <div class="image-wrap">
+                        <img src="<%= blog.coverImageURL %>" class="blog-image" alt="Draft cover">
+                        <span class="draft-badge">Draft</span>
+                      </div>
+
+                      <div class="blog-body">
+
+                        <!-- TITLE -->
+                        <div class="blog-title">
+                          <%= blog.title || "Untitled Draft" %>
+                        </div>
+
+                        <!-- DESCRIPTION -->
+                        <div class="blog-desc">
+                          <%= blog.content?.blocks?.find(b=> b.type === "paragraph")?.data?.text || "" %>
+                        </div>
+
+                        <div class="blog-divider"></div>
+
+                        <!-- FOOTER -->
+                        <div class="blog-footer">
+
+                          <div class="author-info">
+                            <img src="<%= blog.CREATED_BY?.profileImageURL || '/image/default.png' %>">
+                            <span>
+                              <%= blog.CREATED_BY?.fullName %> ·
+                                <%= blog.updatedAt.toDateString() %>
+                            </span>
+                          </div>
+
+                          <div class="d-flex gap-2">
+                            <a href="/blog/edit/<%= blog._id %>" class="btn btn-outline-secondary btn-sm">
+                              Edit
+                            </a>
+                            <a href="/blog/publish/<%= blog._id %>" class="btn btn-primary btn-sm">
+                              Publish
+                            </a>
+                            <button type="button" class="btn btn-outline-danger btn-sm view-btn" onclick="openActionModal({
+    title: 'Delete Blog',
+    message: 'This blog will be marked as <strong>Deleted</strong>. You can restore it later.',
+    actionUrl: '/blog/delete/<%= blog._id %>',
+    confirmText: 'Delete',
+    confirmClass: 'btn-danger'
+  })">
+                              Delete
+                            </button>
+                          </div>
+
+                        </div>
+
+                      </div>
+                    </div>
+
+                  </div>
+                  <% }) %>
+
+              </div>
+
+        </div>
       </div>
-
     </div>
-  </div>
-</div>
+    <!-- GLOBAL ACTION CONFIRM MODAL -->
+    <div class="modal fade" id="actionConfirmModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-<%- include("../partials/footer") %>
-<%- include("../partials/script") %>
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Confirm Action</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body" id="modalMessage">
+            Are you sure?
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-light" data-bs-dismiss="modal">
+              Cancel
+            </button>
+
+            <form id="modalActionForm" method="POST">
+              <button type="submit" class="btn" id="modalActionBtn">
+                Confirm
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <%- include("../partials/footer") %>
+      <%- include("../partials/script") %>
+
+        <script>
+          function openActionModal({
+            title,
+            message,
+            actionUrl,
+            confirmText,
+            confirmClass
+          }) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalMessage").innerHTML = message;
+
+            const form = document.getElementById("modalActionForm");
+            form.action = actionUrl;
+
+            const btn = document.getElementById("modalActionBtn");
+            btn.innerText = confirmText;
+            btn.className = `btn ${confirmClass}`;
+
+            const modal = new bootstrap.Modal(
+              document.getElementById("actionConfirmModal")
+            );
+            modal.show();
+          }
+        </script>
 
 </body>
+
 </html>

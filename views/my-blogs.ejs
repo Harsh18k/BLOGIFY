@@ -1,227 +1,329 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <%- include('./partials/head') %>
-  <title>My Blogs | Blogify</title>
+    <title>My Blogs | Blogify</title>
 
-  <style>
-    body {
-      background: #f8fafc;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+    <style>
+      body {
+        background: #f8fafc;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-    .page-wrapper {
-      flex: 1;
-      padding-bottom: 60px;
-    }
+      .page-wrapper {
+        flex: 1;
+        padding-bottom: 60px;
+      }
 
-    .blog-container {
-      max-width: 1800px;
-      margin: auto;
-      padding: 0 16px;
-    }
+      .blog-container {
+        max-width: 1800px;
+        margin: auto;
+        padding: 0 16px;
+      }
 
-    .blogs-header h2 {
-      font-weight: 800;
-      color: #0f172a;
-      margin-bottom: 24px;
-    }
+      .blogs-header h2 {
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 24px;
+      }
 
-    /* ===== BLOG CARD ===== */
-    .blog-card {
-      background: #ffffff;
-      border-radius: 14px;
-      overflow: hidden;
-      box-shadow: 0 12px 28px rgba(0,0,0,0.08);
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      transition: transform .15s ease;
-    }
+      /* ===== BLOG CARD ===== */
+      .blog-card {
+        background: #ffffff;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        transition: transform .15s ease;
+      }
 
-    .blog-card:hover {
-      transform: translateY(-4px);
-    }
+      .blog-card:hover {
+        transform: translateY(-4px);
+      }
 
-    /* IMAGE + BADGE */
-    .image-wrap {
-      position: relative;
-    }
+      /* IMAGE + BADGE */
+      .image-wrap {
+        position: relative;
+      }
 
-    .blog-image {
-      width: 100%;
-      height: 230px;
-      object-fit: cover;
-    }
+      .blog-image {
+        width: 100%;
+        height: 230px;
+        object-fit: cover;
+      }
 
-    .status-badge {
-      position: absolute;
-      top: 12px;
-      right: 12px;
-      padding: 4px 10px;
-      font-size: 12px;
-      font-weight: 700;
-      border-radius: 999px;
-      color: #fff;
-      letter-spacing: 0.3px;
-    }
+      .status-badge {
+        position: absolute;
+        top: 12px;
+        right: 12px;
+        padding: 4px 10px;
+        font-size: 12px;
+        font-weight: 700;
+        border-radius: 999px;
+        color: #fff;
+        letter-spacing: 0.3px;
+      }
 
-    .status-published {
-      background: #16a34a;
-    }
+      .status-published {
+        background: #16a34a;
+      }
 
-    .status-draft {
-      background: #f59e0b;
-    }
+      .status-draft {
+        background: #f59e0b;
+      }
 
-    /* BODY */
-    .blog-body {
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-    }
+      .status-deleted {
+        background: #ef4444;
+        /* red */
+      }
 
-    .blog-title {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #0f172a;
-      margin-bottom: 6px;
-    }
+      /* BODY */
+      .blog-body {
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+      }
 
-    .blog-desc {
-      font-size: 14px;
-      color: #475569;
-      line-height: 1.6;
-      max-height: 64px;
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
+      .blog-title {
+        font-size: 1.15rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 6px;
+      }
 
-    .blog-divider {
-      height: 1px;
-      background: #e5e7eb;
-      margin: 12px 0;
-    }
+      .blog-desc {
+        font-size: 14px;
+        color: #475569;
+        line-height: 1.6;
+        max-height: 64px;
+        overflow: hidden;
+        margin-bottom: 14px;
+      }
 
-    .blog-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: auto;
-      gap: 10px;
-    }
+      .blog-divider {
+        height: 1px;
+        background: #e5e7eb;
+        margin: 12px 0;
+      }
 
-    .author-info {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-size: 13px;
-      color: #475569;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      .blog-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        gap: 10px;
+      }
 
-    .author-info img {
-      width: 28px;
-      height: 28px;
-      border-radius: 50%;
-      object-fit: cover;
-    }
+      .author-info {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 13px;
+        color: #475569;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
 
-    .view-btn {
-      font-size: 13px;
-      font-weight: 600;
-      padding: 6px 16px;
-      white-space: nowrap;
-    }
-  </style>
+      .author-info img {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        object-fit: cover;
+      }
+
+      .view-btn {
+        font-size: 13px;
+        font-weight: 600;
+        padding: 6px 16px;
+        white-space: nowrap;
+      }
+    </style>
 </head>
 
 <body>
 
-<%- include('./partials/nav') %>
+  <%- include('./partials/nav') %>
 
-<div class="page-wrapper">
-  <div class="container-fluid mt-4">
-    <div class="blog-container">
+    <div class="page-wrapper">
+      <div class="container-fluid mt-4">
+        <div class="blog-container">
 
-      <div class="blogs-header">
-        <h2>My Blogs</h2>
-      </div>
-
-      <% if (blogs.length === 0) { %>
-        <div class="alert alert-light border">
-          You haven’t published any blogs yet.
-        </div>
-      <% } %>
-
-      <div class="row g-4">
-
-        <% blogs.forEach(blog => { %>
-          <div class="col-12 col-md-6 col-lg-4">
-            <div class="blog-card">
-
-              <!-- IMAGE + STATUS -->
-              <div class="image-wrap">
-                <img
-                  src="<%= blog.coverImageURL %>"
-                  class="blog-image"
-                  alt="Blog cover"
-                >
-
-                <% if (blog.status === "PUBLISHED") { %>
-                  <span class="status-badge status-published">Published</span>
-                <% } else { %>
-                  <span class="status-badge status-draft">Draft</span>
-                <% } %>
-              </div>
-
-              <div class="blog-body">
-
-                <div class="blog-title">
-                  <%= blog.title %>
-                </div>
-
-                <div class="blog-desc">
-                  <%= blog.content?.blocks?.find(b => b.type === "paragraph")?.data?.text || "" %>
-                </div>
-
-                <div class="blog-divider"></div>
-
-                <div class="blog-footer">
-                  <div class="author-info">
-                    <img src="<%= blog.CREATED_BY?.profileImageURL || '/image/default.png' %>">
-                    <span>
-                      <%= blog.CREATED_BY?.fullName %> ·
-                      <%= blog.createdAt.toDateString() %>
-                    </span>
-                  </div>
-
-                  <a
-                    href="/blog/<%= blog._id %>"
-                    class="btn btn-primary btn-sm view-btn"
-                  >
-                    View
-                  </a>
-                </div>
-
-              </div>
-            </div>
+          <div class="blogs-header">
+            <h2>My Blogs</h2>
           </div>
-        <% }) %>
 
+          <% if (blogs.length===0) { %>
+            <div class="alert alert-light border">
+              You haven’t published any blogs yet.
+            </div>
+            <% } %>
+
+              <div class="row g-4">
+
+                <% blogs.forEach(blog=> { %>
+                  <div class="col-12 col-md-6 col-lg-4">
+                    <div class="blog-card">
+
+                      <!-- IMAGE + STATUS -->
+                      <div class="image-wrap">
+                        <img src="<%= blog.coverImageURL %>" class="blog-image" alt="Blog cover">
+
+                        <% if (blog.status==="PUBLISHED" ) { %>
+                          <span class="status-badge status-published">Published</span>
+
+                          <% } else if (blog.status==="DRAFT" ) { %>
+                            <span class="status-badge status-draft">Draft</span>
+
+                            <% } else if (blog.status==="DELETED" ) { %>
+                              <span class="status-badge status-deleted">Deleted</span>
+                              <% } %>
+                      </div>
+
+                      <div class="blog-body">
+
+                        <div class="blog-title">
+                          <%= blog.title %>
+                        </div>
+
+                        <div class="blog-desc">
+                          <%= blog.content?.blocks?.find(b=> b.type === "paragraph")?.data?.text || "" %>
+                        </div>
+
+                        <div class="blog-divider"></div>
+
+                        <div class="blog-footer">
+                          <div class="author-info">
+                            <img src="<%= blog.CREATED_BY?.profileImageURL || '/image/default.png' %>">
+                            <span>
+                              <%= blog.CREATED_BY?.fullName %> ·
+                                <%= blog.createdAt.toDateString() %>
+                            </span>
+                          </div>
+
+                          <div class="d-flex gap-2">
+
+                            <!-- VIEW (always allowed, even deleted if you want) -->
+                            <a href="/blog/<%= blog._id %>" class="btn btn-primary btn-sm view-btn">
+                              View
+                            </a>
+
+                            <!-- EDIT (only for draft) -->
+                            <% if (blog.status==="DRAFT" ) { %>
+                              <a href="/blog/edit/<%= blog._id %>" class="btn btn-outline-secondary btn-sm view-btn">
+                                Edit
+                              </a>
+                              <% } %>
+
+                                <!-- DELETE / RESTORE -->
+                                <% if (blog.status !=="DELETED" ) { %>
+
+                                  <!-- DELETE -->
+                                  <button type="button" class="btn btn-outline-danger btn-sm view-btn" onclick="openActionModal({
+    title: 'Delete Blog',
+    message: 'This blog will be marked as <strong>Deleted</strong>. You can restore it later.',
+    actionUrl: '/blog/delete/<%= blog._id %>',
+    confirmText: 'Delete',
+    confirmClass: 'btn-danger'
+  })">
+                                    Delete
+                                  </button>
+
+                                  <% } else { %>
+
+                                    <!-- RESTORE -->
+                                    <button
+                                    type="button"
+                                    class="btn btn-outline-success btn-sm view-btn"
+                                    onclick="openActionModal({
+                                      title: 'Restore Blog',
+                                      message: 'This blog will be restored as a <strong>Draft</strong>.',
+                                      actionUrl: '/blog/restore/<%= blog._id %>',
+                                      confirmText: 'Restore',
+                                      confirmClass: 'btn-success'
+                                    })"
+                                  >
+                                    Restore
+                                  </button>
+
+                                    <% } %>
+
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                  </div>
+                  <% }) %>
+
+              </div>
+
+        </div>
       </div>
-
     </div>
-  </div>
-</div>
+    <!-- GLOBAL ACTION CONFIRM MODAL -->
+    <div class="modal fade" id="actionConfirmModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
 
-<%- include('./partials/footer') %>
-<%- include('./partials/script') %>
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalTitle">Confirm Action</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body" id="modalMessage">
+            Are you sure?
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-light" data-bs-dismiss="modal">
+              Cancel
+            </button>
+
+            <form id="modalActionForm" method="POST">
+              <button type="submit" class="btn" id="modalActionBtn">
+                Confirm
+              </button>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <%- include('./partials/footer') %>
+      <%- include('./partials/script') %>
+        <script>
+          function openActionModal({
+            title,
+            message,
+            actionUrl,
+            confirmText,
+            confirmClass
+          }) {
+            document.getElementById("modalTitle").innerText = title;
+            document.getElementById("modalMessage").innerHTML = message;
+
+            const form = document.getElementById("modalActionForm");
+            form.action = actionUrl;
+
+            const btn = document.getElementById("modalActionBtn");
+            btn.innerText = confirmText;
+            btn.className = `btn ${confirmClass}`;
+
+            const modal = new bootstrap.Modal(
+              document.getElementById("actionConfirmModal")
+            );
+            modal.show();
+          }
+        </script>
 
 </body>
+
 </html>

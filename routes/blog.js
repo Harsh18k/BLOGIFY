@@ -5,6 +5,7 @@ const upload = require("../config/multer");
 const Blog = require("../models/blog");
 const Comment = require("../models/comment");
 const user = require("../models/user");
+const { route } = require("./user");
 
 const router = Router();
 
@@ -14,7 +15,7 @@ const router = Router();
    ADD NEW BLOG PAGE
 ================================ */
 router.get("/add-new", (req, res) => {
-  return res.render("addBlog", { user: req.user });
+  return res.render("addBlog", { user: req.user,draft: null });
 });
 
 
@@ -117,24 +118,7 @@ router.post(
     }
   });
 
-/* ===============================
-   SINGLE BLOG PAGE
-================================ */
-router.get("/:blogId", async (req, res) => {
-  const { blogId } = req.params;
 
-  const blog = await Blog.findById(blogId).populate("CREATED_BY");
-
-  const comments = await Comment.find({ BLOG_ID: blogId })
-    .populate("CREATED_BY")
-    .sort({ createdAt: -1 });
-
-  return res.render("blog", {
-    blog,
-    user: req.user,
-    comments,
-  });
-});
 
 /* ===============================
    ADD COMMENT
@@ -206,6 +190,158 @@ router.post("/", upload.single("coverImage"), async (req, res) => {
     console.error("Blog publish error:", err);
     return res.status(500).send("Something went wrong");
   }
+});
+
+// ==================================================
+// edit draft route
+// =====================================================
+router.get("/edit/:id", async (req, res) => {
+  try {
+    if (!req.user) return res.redirect("/user/signin");
+
+    const draft = await Blog.findOne({
+      _id: req.params.id,
+      CREATED_BY: req.user._id,
+      status: "DRAFT",
+    });
+
+    if (!draft) {
+      return res.redirect("/dashboard/drafts");
+    }
+
+    return res.render("addBlog", {
+      user: req.user,
+      draft, // 👈 VERY IMPORTANT
+    });
+
+  } catch (err) {
+    console.error("Edit draft error:", err);
+    return res.redirect("/dashboard/drafts");
+  }
+});
+
+// ======================
+// publish from draft page 
+// ======================
+// ===============================
+// PUBLISH DRAFT FROM DASHBOARD
+// ===============================
+router.get("/publish/:id", async (req, res) => {
+  try {
+    if (!req.user) return res.redirect("/user/signin");
+
+    const { id } = req.params;
+
+    const blog = await Blog.findOneAndUpdate(
+      {
+        _id: id,
+        CREATED_BY: req.user._id,
+        status: "DRAFT",
+      },
+      {
+        status: "PUBLISHED",
+        publishedAt: new Date(),
+      },
+      { new: true }
+    );
+
+    if (!blog) {
+      return res.status(404).render("error", {
+        message: "Draft not found or already published",
+      });
+    }
+
+    return res.redirect(`/blog/${blog._id}`);
+  } catch (err) {
+    console.error("Publish draft error:", err);
+    return res.status(500).send("Failed to publish draft");
+  }
+});
+// ===============================
+// SOFT DELETE BLOG (DRAFT + PUBLISHED)
+// ===============================
+router.post("/delete/:id", async (req, res) => {
+  try {
+    if (!req.user) return res.redirect("/user/signin");
+
+    const { id } = req.params;
+
+    const blog = await Blog.findOneAndUpdate(
+      {
+        _id: id,
+        CREATED_BY: req.user._id,
+        status: { $ne: "DELETED" }, // already deleted nahi hona chahiye
+      },
+      {
+        status: "DELETED",
+      },
+      { new: true }
+    );
+
+    if (!blog) {
+      return res.status(404).send("Blog not found");
+    }
+
+    // redirect logic
+    return res.redirect(req.get("Referer") || "/");
+
+  } catch (err) {
+    console.error("Soft delete error:", err);
+    return res.status(500).send("Delete failed");
+  }
+});
+// ===============================
+// RESTORE SOFT-DELETED BLOG
+// ===============================
+router.post("/restore/:id", async (req, res) => {
+  try {
+    if (!req.user) {
+      return res.redirect("/user/signin");
+    }
+
+    const { id } = req.params;
+
+    const blog = await Blog.findOneAndUpdate(
+      {
+        _id: id,
+        CREATED_BY: req.user._id,
+        status: "DELETED",
+      },
+      {
+        status: "DRAFT", // restore as draft (safe default)
+        updatedAt: new Date(),
+      },
+      { new: true }
+    );
+
+    if (!blog) {
+      return res.status(404).send("Blog not found or already restored");
+    }
+
+    return res.redirect(req.get("referer") || "/user/my-blogs");
+
+  } catch (err) {
+    console.error("Restore blog error:", err);
+    return res.status(500).send("Failed to restore blog");
+  }
+});
+/* ===============================
+   SINGLE BLOG PAGE
+================================ */
+router.get("/:blogId", async (req, res) => {
+  const { blogId } = req.params;
+
+  const blog = await Blog.findById(blogId).populate("CREATED_BY");
+
+  const comments = await Comment.find({ BLOG_ID: blogId })
+    .populate("CREATED_BY")
+    .sort({ createdAt: -1 });
+
+  return res.render("blog", {
+    blog,
+    user: req.user,
+    comments,
+  });
 });
 
 module.exports = router;

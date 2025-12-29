@@ -235,34 +235,35 @@
 </head>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-<!-- // implementing modal -->
-<!-- EMPTY CONTENT WARNING MODAL -->
-<div class="modal fade" id="emptyContentModal" tabindex="-1">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
 
-      <div class="modal-header">
-        <h5 class="modal-title">Nothing to save </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-
-      <div class="modal-body">
-        <p>Please write something before using <strong>Preview</strong> or <strong>Save Draft</strong>.</p>
-      </div>
-
-      <div class="modal-footer">
-        <button class="btn btn-primary" data-bs-dismiss="modal">
-          Okay, I’ll write
-        </button>
-      </div>
-
-    </div>
-  </div>
-</div>
 
 <body>
 
   <%- include('./partials/nav') %>
+    <!-- // implementing modal -->
+    <!-- EMPTY CONTENT WARNING MODAL -->
+    <div class="modal fade" id="emptyContentModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+          <div class="modal-header">
+            <h5 class="modal-title">Nothing to save </h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+          </div>
+
+          <div class="modal-body">
+            <p>Please write something before using <strong>Preview</strong> or <strong>Save Draft</strong>.</p>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-primary" data-bs-dismiss="modal">
+              Okay, I’ll write
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </div>
 
     <div class="editor-page">
 
@@ -314,23 +315,27 @@
         </div>
 
         <form id="blogForm" class="editor-form" action="/blog" method="POST" enctype="multipart/form-data">
+          <% if (draft && draft._id) { %>
+            <input type="hidden" id="existingDraftId" value="<%= draft._id %>">
+            <% } %>
 
-          <!-- COVER IMAGE -->
-          <label class="cover-dropzone">
-            <input type="file" name="coverImage" class="cover-input" accept="image/*" id="coverInput">
-            <div class="cover-text">
-              🖼️ <strong>Cover Image</strong><br>
-              Click to upload a cover image
-            </div>
-            <div class="cover-preview" id="coverPreview"></div>
-          </label>
+              <!-- COVER IMAGE -->
+              <label class="cover-dropzone">
+                <input type="file" name="coverImage" class="cover-input" accept="image/*" id="coverInput">
+                <div class="cover-text">
+                  🖼️ <strong>Cover Image</strong><br>
+                  Click to upload a cover image
+                </div>
+                <div class="cover-preview" id="coverPreview"></div>
+              </label>
 
-          <!-- TITLE -->
-          <input type="text" name="title" class="blog-title-input" placeholder="Enter your blog title..." required>
+              <!-- TITLE -->
+              <input type="text" name="title" class="blog-title-input" placeholder="Enter your blog title..."
+              value="<%= draft && draft.title ? draft.title : '' %>" required>
 
-          <!-- EDITOR -->
-          <div id="editorjs"></div>
-          <input type="hidden" name="content" id="content">
+              <!-- EDITOR -->
+              <div id="editorjs"></div>
+              <input type="hidden" name="content" id="content">
         </form>
       </div>
 
@@ -357,10 +362,20 @@
       const IS_PREMIUM = <%= user?.isPremium ? 'true' : 'false' %>;
       let currentDraftId = null;
 
+      // edit feature
+      const existingDraftInput = document.getElementById("existingDraftId");
+      if (existingDraftInput) {
+        currentDraftId = existingDraftInput.value;
+      }
+
+      const EXISTING_DRAFT_DATA = <%- JSON.stringify(draft && draft.content ? draft.content : null) %>;
+
+
       /* ================= EDITOR INIT (UNCHANGED) ================= */
       const editor = new EditorJS({
         holder: 'editorjs',
         placeholder: 'Start writing your story...',
+        data: EXISTING_DRAFT_DATA || undefined,
         tools: {
           header: { class: Header, inlineToolbar: true },
           paragraph: { class: Paragraph, inlineToolbar: true },
@@ -386,7 +401,7 @@
         spinner.style.display = "none";
         statusText.innerText = "Not saved yet";
       }
-      // modal helper script 
+      // modal helper script
       function showEmptyContentModal() {
         const modal = new bootstrap.Modal(
           document.getElementById("emptyContentModal")
@@ -394,7 +409,7 @@
         modal.show();
       }
 
-      // 
+      //
       document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
         new bootstrap.Tooltip(el);
       });
@@ -518,32 +533,46 @@
       /* ================= COVER PREVIEW (UNCHANGED) ================= */
       const coverInput = document.getElementById("coverInput");
       const coverPreview = document.getElementById("coverPreview");
-
-      coverInput.addEventListener("change", () => {
-        const file = coverInput.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = () => {
-          coverPreview.innerHTML = `
-      <img src="${reader.result}">
+      <% if (draft && draft.coverImageURL) { %>
+        coverPreview.innerHTML = `
+      <img src="<%= draft.coverImageURL %>">
       <button type="button" class="cover-remove" id="removeCover">&times;</button>
     `;
-          coverPreview.style.display = "block";
+        coverPreview.style.display = "block";
 
-          // ❌ remove cover image
-          document.getElementById("removeCover").addEventListener("click", () => {
-            coverInput.value = "";
-            coverPreview.innerHTML = "";
-            coverPreview.style.display = "none";
-            resetAutoSaveTimer(); // autosave on remove
-          });
-        };
+        document.getElementById("removeCover").addEventListener("click", () => {
+          coverInput.value = "";
+          coverPreview.innerHTML = "";
+          coverPreview.style.display = "none";
+          resetAutoSaveTimer();
+        });
+  <% } %>
 
-        reader.readAsDataURL(file);
+        coverInput.addEventListener("change", () => {
+          const file = coverInput.files[0];
+          if (!file) return;
 
-        resetAutoSaveTimer(); // autosave on upload
-      });
+          const reader = new FileReader();
+          reader.onload = () => {
+            coverPreview.innerHTML = `
+    <img src="${reader.result}">
+    <button type="button" class="cover-remove" id="removeCover">&times;</button>
+    `;
+            coverPreview.style.display = "block";
+
+            // ❌ remove cover image
+            document.getElementById("removeCover").addEventListener("click", () => {
+              coverInput.value = "";
+              coverPreview.innerHTML = "";
+              coverPreview.style.display = "none";
+              resetAutoSaveTimer(); // autosave on remove
+            });
+          };
+
+          reader.readAsDataURL(file);
+
+          resetAutoSaveTimer(); // autosave on upload
+        });
 
       /* ================= PREVIEW (UNCHANGED) ================= */
       document.getElementById("previewBtn").addEventListener("click", async () => {
