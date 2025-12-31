@@ -4,7 +4,7 @@ const upload = require("../config/multer");
 
 const Blog = require("../models/blog");
 const Comment = require("../models/comment");
-const user = require("../models/user");
+const User = require("../models/user");
 const { route } = require("./user");
 
 const router = Router();
@@ -336,6 +336,32 @@ router.get("/:blogId", async (req, res) => {
   const comments = await Comment.find({ BLOG_ID: blogId })
     .populate("CREATED_BY")
     .sort({ createdAt: -1 });
+
+    //  ===============================
+    //  RECENT READS TRACKING
+  
+  if (req.user) {
+    try {
+      // remove if already exists (avoid duplicates)
+      await User.findByIdAndUpdate(req.user._id, {
+        $pull: { recentReads: blogId }
+      });
+
+      // add to top and keep only 10
+      await User.findByIdAndUpdate(req.user._id, {
+        $push: {
+          recentReads: {
+            $each: [blogId],
+            $position: 0,
+            $slice: 10
+          }
+        }
+      });
+    } catch (err) {
+      console.error("Recent reads update failed:", err);
+      // ❗ do NOT block page load
+    }
+  }
 
   return res.render("blog", {
     blog,

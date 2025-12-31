@@ -4,3 +4,102 @@
   crossorigin="anonymous"
 ></script>
 
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const toggleBtn = document.getElementById("sidebarToggle");
+    const sidebar = document.querySelector(".blogify-sidebar");
+    const footer = document.querySelector("footer");
+
+    if (!toggleBtn || !sidebar) return;
+
+    const STORAGE_KEY = "blogify_sidebar";
+    const DESKTOP_BREAKPOINT = 992;
+
+    /* =====================================================
+       INITIAL STATE (LOAD)
+    ===================================================== */
+
+    const savedState = localStorage.getItem(STORAGE_KEY);
+    const isDesktop = window.innerWidth >= DESKTOP_BREAKPOINT;
+
+    if (savedState === "open") {
+      document.body.classList.add("sidebar-open");
+    } else if (savedState === "closed") {
+      document.body.classList.remove("sidebar-open");
+    } else {
+      // Default: open on desktop, closed on mobile
+      if (isDesktop) {
+        document.body.classList.add("sidebar-open");
+      } else {
+        document.body.classList.remove("sidebar-open");
+      }
+    }
+
+    /* =====================================================
+       TOGGLE (ONLY WAY TO OPEN / CLOSE)
+    ===================================================== */
+
+    toggleBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      const isOpen = document.body.classList.toggle("sidebar-open");
+      localStorage.setItem(STORAGE_KEY, isOpen ? "open" : "closed");
+
+      if (!isOpen) {
+        sidebar.style.height = "";
+      }
+
+      requestSidebarUpdate();
+    });
+
+    /* =====================================================
+       FOOTER-AWARE SIDEBAR HEIGHT (NO DELAY)
+    ===================================================== */
+
+    let ticking = false;
+
+    const adjustSidebarHeight = () => {
+      if (
+        !document.body.classList.contains("sidebar-open") ||
+        !footer
+      ) {
+        sidebar.style.height = "";
+        ticking = false;
+        return;
+      }
+
+      const footerRect = footer.getBoundingClientRect();
+      const viewportHeight = window.innerHeight;
+      const overlap = Math.max(0, viewportHeight - footerRect.top);
+
+      if (overlap > 0) {
+        sidebar.style.height =
+          `calc(100vh - var(--blogify-navbar-height) - ${overlap}px)`;
+      } else {
+        sidebar.style.height =
+          `calc(100vh - var(--blogify-navbar-height))`;
+      }
+
+      ticking = false;
+    };
+
+    const requestSidebarUpdate = () => {
+      if (!ticking) {
+        window.requestAnimationFrame(adjustSidebarHeight);
+        ticking = true;
+      }
+    };
+
+    /* =====================================================
+       EVENTS
+    ===================================================== */
+
+    document.addEventListener("scroll", requestSidebarUpdate);
+    window.addEventListener("resize", requestSidebarUpdate);
+
+    // Initial calculation
+    requestSidebarUpdate();
+  });
+</script>
+<!-- Bootstrap / other scripts -->
+<script src="/js/script.js"></script>

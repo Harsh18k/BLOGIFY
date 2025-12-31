@@ -1,20 +1,59 @@
+/* =====================================================
+   BASE RESET
+===================================================== */
+
 html, body {
-    height: 100%;
-  }
-  
-  body {
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .main-content {
-    flex: 1;
-  }
+  height: 100%;
+  overflow-x: hidden;
+}
 
+body {
+  margin: 0;
+  background: #f8fafc;
+  color: #0f172a;
+  
 
-  /* Go Premium link */
+  /* 🔑 layout fix */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+/* =====================================================
+   GLOBAL LAYOUT BACKGROUND FIX
+===================================================== */
+
+.blogify-page-wrapper,
+.blogify-content-shift,
+.blogify-layout,
+.blogify-main {
+  background: transparent !important;
+}
+
+/* =====================================================
+   ROOT VARIABLES
+===================================================== */
+
+:root {
+  --blogify-navbar-height: 72px;
+  --blogify-sidebar-width: 260px;
+}
+
+/* =====================================================
+   ICON STYLES
+===================================================== */
+
+value i,
+feature-card i {
+  opacity: 0.95;
+  color: #4f46e5;
+}
+
+/* =====================================================
+   PREMIUM STYLES
+===================================================== */
+
 .premium-link {
-  color: #facc15 !important; /* gold */
+  color: #facc15 !important;
   font-weight: 600;
 }
 
@@ -22,9 +61,797 @@ html, body {
   color: #fde047 !important;
 }
 
-/* Premium badge */
 .premium-badge {
-  color: #22c55e !important; /* green */
+  color: #22c55e !important;
   font-weight: 600;
   cursor: default;
+}
+
+/* =====================================================
+   NAVBAR
+===================================================== */
+
+.blogify-navbar {
+  min-height: 76px;
+  padding: 0 20px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1040;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.blogify-navbar .nav-link {
+  color: #111827;
+  font-weight: 500;
+  padding: 6px 8px;
+}
+
+.blogify-navbar .nav-link:hover {
+  color: #2563eb;
+}
+
+.blogify-navbar .btn-link {
+  color: #111827;
+}
+
+.blogify-navbar .btn-link:hover {
+  color: #2563eb;
+}
+
+.nav-divider {
+  width: 1px;
+  height: 26px;
+  background: rgba(0, 0, 0, 0.08);
+  margin: 0 10px;
+}
+
+/* =====================================================
+   NAVBAR SEARCH
+===================================================== */
+
+.blogify-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #f5f6f7;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  border: 1px solid transparent;
+  transition: all 0.2s ease;
+}
+
+.blogify-search:hover {
+  background: #eef0f2;
+}
+
+.blogify-search:focus-within {
+  background: #ffffff;
+  border-color: #d1d5db;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.08);
+}
+
+.blogify-search input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 200px;
+  font-size: 14px;
+  color: #111827;
+}
+
+.blogify-search i {
+  color: #6b7280;
+  font-size: 14px;
+}
+
+/* =====================================================
+   SIDEBAR
+===================================================== */
+
+.blogify-sidebar {
+  position: fixed;
+  top: var(--blogify-navbar-height);
+  left: 0;
+  width: var(--blogify-sidebar-width);
+  height: calc(100vh - var(--blogify-navbar-height));
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  z-index: 1030;
+  overflow-y: auto;
+  transform: translateX(-100%);
+  transition: transform 0.25s ease;
+}
+
+body.sidebar-open .blogify-sidebar {
+  transform: translateX(0);
+}
+
+/* =====================================================
+   SIDEBAR CONTENT
+===================================================== */
+
+.sidebar-content {
+  padding: 16px;
+  padding-bottom: 24px;
+}
+
+.sidebar-section {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px;
+  border-radius: 999px;
+  color: #111827;
+  font-size: 15px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: background 0.15s ease;
+}
+
+.sidebar-item:hover {
+  background: #f3f4f6;
+}
+
+.sidebar-item i {
+  font-size: 16px;
+  width: 18px;
+  color: #374151;
+}
+
+.sidebar-item.muted {
+  color: #6b7280;
+}
+
+.sidebar-item.disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.sidebar-divider {
+  border-top: 1px solid #e5e7eb;
+  margin: 16px 0;
+}
+
+.sidebar-subtext {
+  font-size: 13px;
+  color: #6b7280;
+  padding-left: 44px;
+}
+
+/* =====================================================
+   PAGE WRAPPER & LAYOUT
+===================================================== */
+
+.blogify-page-wrapper {
+  flex: 1; /* 🔑 THIS pushes footer down */
+  overflow: visible;
+  padding-top: var(--blogify-navbar-height);
+  display: flex;
+  flex-direction: column;
+}
+
+.blogify-content-shift {
+  transition: margin-left 0.25s ease;
+}
+
+/* .blogify-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 48px;
+
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+} */
+/* .blogify-layout {
+  display: block;
+  width: 100%;
+} */
+.blogify-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  column-gap: 48px;
+
+  width: 100%;              /* FULL SCREEN */
+  max-width: none;          /* 🔥 THIS fixes the shift */
+  margin: 0;
+  padding: 0 24px;
+  
+}
+
+.blogify-layout.no-right-panel {
+  grid-template-columns: 1fr !important;
+}
+
+.no-right-panel {
+  grid-template-columns: 1fr !important;
+}
+
+/* =====================================================
+   MAIN CONTENT
+===================================================== */
+
+/* .blogify-main {
+  margin-left: auto;
+  margin-right: auto;
+  min-width: 0;
+} */
+/* .blogify-main {
+  max-width: 720px;          
+  margin-left: auto;
+  margin-right: auto;
+  padding-right: 388px;     
+  padding-left: 24px;
+  min-width: 0;
+} */
+.blogify-main {
+  min-width: 0;       /* prevents overflow */
+}
+
+/* =====================================================
+   RIGHT PANEL
+===================================================== */
+
+.right-panel {
+  position: fixed;
+  top: var(--blogify-navbar-height);
+  right: 0;
+  width: 340px;
+  height: calc(100vh - var(--blogify-navbar-height));
+  padding: 24px;
+  background: #ffffff;
+  border-left: 1px solid #e5e7eb;
+  display: flex;
+  flex-direction: column;
+}
+
+/* =====================================================
+   RIGHT PANEL SECTIONS
+===================================================== */
+
+.right-section {
+  margin-bottom: 24px;
+}
+
+.right-section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.right-divider {
+  height: 1px;
+  background: #e5e7eb;
+  margin: 16px 0;
+}
+
+/* =====================================================
+   RIGHT PANEL - EDITOR'S SUGGESTION
+===================================================== */
+
+.right-featured-card {
+  position: relative;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 12px;
+  border-radius: 10px;
+  background: #f9fafb;
+}
+
+.right-featured-card:hover {
+  background: #f3f4f6;
+}
+
+.right-featured-card .card-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* =====================================================
+   RIGHT PANEL - SCROLLABLE AREA
+===================================================== */
+
+.right-scrollable {
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 6px;
+}
+
+.right-scrollable::-webkit-scrollbar {
+  width: 4px;
+}
+
+.right-scrollable::-webkit-scrollbar-thumb {
+  background: #e5e7eb;
+  border-radius: 10px;
+}
+
+/* =====================================================
+   RIGHT PANEL - COMPACT BLOG CARD
+===================================================== */
+
+.blog-card--compact {
+  padding: 16px 0;
+  gap: 16px;
+}
+
+.blog-card--compact .card-link {
+  padding-bottom: 16px;
+}
+
+.blog-card--compact .blog-body {
+  max-width: 100%;
+}
+
+.blog-card--compact .author-info {
+  margin-bottom: 4px;
+}
+
+.blog-card--compact .author-info img {
+  width: 20px;
+  height: 20px;
+}
+
+.blog-card--compact .blog-title {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.35;
+  margin-bottom: 4px;
+}
+
+.blog-card--compact .blog-desc {
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-line-clamp: 2;
+  margin-bottom: 8px;
+}
+
+.blog-card--compact .blog-footer {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.blog-card--compact .blog-image {
+  width: 72px;
+  height: 72px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+/* =====================================================
+   RIGHT PANEL - EMPTY & GUEST STATES
+===================================================== */
+
+.right-empty {
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+.right-guest-box {
+  background: #f9fafb;
+  border: 1px dashed #e5e7eb;
+  border-radius: 10px;
+  padding: 16px;
+  text-align: center;
+}
+
+.right-guest-text {
+  font-size: 13px;
+  color: #6b7280;
+  margin-bottom: 12px;
+}
+
+.right-guest-btn {
+  display: inline-block;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  border-radius: 999px;
+  background: #111827;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.right-guest-btn:hover {
+  background: #1f2937;
+}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+footer {
+  position: relative;
+  width: 100%;
+}
+
+.blogify-footer {
+  background: #ffffff;
+  border-top: 1px solid #e5e7eb;
+  padding: 18px 0;
+  margin-top: 60px;
+}
+
+.blogify-footer .container {
+  max-width: 1300px;
+}
+
+.footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* =====================================================
+   FOOTER BRAND
+===================================================== */
+
+.footer-brand .brand-name {
+  font-weight: 700;
+  font-size: 16px;
+  color: #111827;
+}
+
+.footer-brand .brand-tagline {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* =====================================================
+   FOOTER LINKS
+===================================================== */
+
+.footer-links {
+  display: flex;
+  gap: 20px;
+}
+
+.footer-links a {
+  font-size: 14px;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #2563eb;
+}
+
+/* =====================================================
+   FOOTER RIGHT SECTION
+===================================================== */
+
+.footer-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.footer-social {
+  display: flex;
+  gap: 14px;
+}
+
+.footer-social a {
+  color: #6b7280;
+  font-size: 15px;
+}
+
+.footer-social a:hover {
+  color: #2563eb;
+}
+
+.footer-copy {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* =====================================================
+   DESKTOP BEHAVIOR - SIDEBAR LAYOUT
+===================================================== */
+
+/* @media (min-width: 992px) {
+  body.sidebar-open .blogify-layout {
+    padding-left: 20px;
+  }
+} */
+
+/* =====================================================
+   TABLET/DESKTOP RESPONSIVE
+===================================================== */
+
+@media (max-width: 1024px) {
+  .blogify-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .right-panel {
+    display: none;
+  }
+}
+
+/* =====================================================
+   MOBILE BEHAVIOR
+===================================================== */
+
+@media (max-width: 991px) {
+  .blogify-content-shift {
+    margin-left: 0 !important;
+  }
+
+  body.sidebar-open::before {
+    content: "";
+    position: fixed;
+    top: var(--blogify-navbar-height);
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 1020;
+  }
+}
+@media (max-width: 1024px) {
+  .blogify-main {
+    padding-right: 24px;
+  }
+}
+
+/* =====================================================
+   MOBILE FOOTER RESPONSIVE
+===================================================== */
+
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+    text-align: center;
+    gap: 14px;
+  }
+
+  .footer-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .footer-right {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+/* =====================================================
+   DESKTOP SIDEBAR PUSH – SMOOTH
+===================================================== */
+
+.blogify-page-wrapper {
+  transition: margin-left 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: margin-left;
+}
+
+@media (min-width: 992px) {
+  body.sidebar-open .blogify-layout {
+    padding-left: var(--blogify-sidebar-width);
+  }
+}
+
+/* =====================================================
+   SUBTLE CONTENT MOTION (DESKTOP ONLY)
+===================================================== */
+
+.blogify-main {
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@media (min-width: 992px) {
+  body.sidebar-open .blogify-main {
+    transform: translateX(12px);
+  }
+}
+/* BLOG PAGE — VERY subtle */
+@media (min-width: 992px) {
+  body.page-blog.sidebar-open .blogify-main {
+    transform: translateX(12px);
+  }
+}
+
+/* LANDING PAGE — allowed more drama */
+@media (min-width: 992px) {
+  body.page-landing.sidebar-open .blogify-main {
+    transform: translateX(48px);
+  }
+}
+
+/* =====================================================
+   AUTH PAGES (SIGN IN / SIGN UP)
+===================================================== */
+
+.auth-page {
+  flex: 1; /* 🔑 keeps footer at bottom */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px 16px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.auth-google-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #111827;
+  text-decoration: none;
+  font-weight: 500;
+  transition: background 0.2s ease;
+}
+
+.auth-google-btn:hover {
+  background: #f9fafb;
+}
+
+.auth-google-btn img {
+  width: 18px;
+  height: 18px;
+}
+
+.auth-divider {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+}
+
+.auth-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+.auth-divider span {
+  position: relative;
+  background: #ffffff;
+  padding: 0 12px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+.auth-link {
+  font-size: 13px;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.auth-link:hover {
+  text-decoration: underline;
+}
+/* =====================================================
+   FLASH MESSAGE – FULL WIDTH BAR (NO SHIFT)
+===================================================== */
+
+.flash-wrapper {
+  position: fixed;
+  top: var(--blogify-navbar-height);
+  left: 0;
+  right: 0;
+  z-index: 1100;
+
+  display: flex;
+  justify-content: center;
+  pointer-events: none; /* clicks pass through except alert */
+}
+
+.flash-wrapper .alert {
+  pointer-events: auto;
+
+  width: calc(100% - 32px);
+  max-width: 960px;
+
+  margin: 12px auto 0;
+  padding: 14px 18px;
+
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.12),
+    0 4px 10px rgba(0, 0, 0, 0.06);
+
+  animation: flash-slide-down 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Success */
+.flash-wrapper .alert-success {
+  background: #ecfdf5;
+  color: #065f46;
+  border: 1px solid #a7f3d0;
+}
+
+/* Error */
+.flash-wrapper .alert-danger {
+  background: #fef2f2;
+  color: #7f1d1d;
+  border: 1px solid #fecaca;
+}
+
+/* Close button */
+.flash-wrapper .btn-close {
+  font-size: 12px;
+  opacity: 0.6;
+}
+
+.flash-wrapper .btn-close:hover {
+  opacity: 1;
+}
+
+/* Entry animation */
+@keyframes flash-slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+/* ================= GLOBAL LAYOUT FIX ================= */
+
+.blogify-page-wrapper {
+  min-height: calc(100vh - var(--blogify-navbar-height));
+  display: flex;
+  flex-direction: column;
+  background: #f8fafc;
+}
+
+.blogify-content-shift {
+  flex: 1;
+  display: flex;
+}
+
+.blogify-layout {
+  flex: 1;
+}
+
+.blogify-main {
+  background: transparent;
 }

@@ -12,6 +12,8 @@ const subscriptionRoute = require("./routes/subscription");
 const dashboardRoutes = require("./routes/dashboard");
 
 const { checkAuthenticationCookie } = require("./middleware/authentication");
+const rightPanelLocals = require("./middleware/rightPanel.locals");
+const attachRightPanelData = require("./middleware/rightPanel.middleware");
 const { generateToken } = require("./services/authentication");
 const addDraftCount = require("./middleware/addDraftCount");
 
@@ -68,6 +70,7 @@ app.use(checkAuthenticationCookie("token"));
 // count middleware 
 app.use(addDraftCount);
 
+
 /* -----------------------------
       EJS GLOBAL USER
 ----------------------------- */
@@ -76,6 +79,10 @@ app.use((req, res, next) => {
   res.locals.user = req.user || null;
   next();
 });
+
+// rightpanel middleware
+app.use(rightPanelLocals);
+app.use(attachRightPanelData);
 
 /* -----------------------------
       FLASH MESSAGES
@@ -122,7 +129,10 @@ app.get(
 );
 // landing page 
 app.get("/", (req, res) => {
-  res.render("landing", { user: req.user });
+  res.render("landing", { 
+    user: req.user ,
+    
+  });
 });
 
 /* -----------------------------

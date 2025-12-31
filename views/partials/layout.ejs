@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <%- include("./head") %>
+  <title><%= title || "Blogify" %></title>
+</head>
+
+<body>
+  <%
+    const _hideRightPanel = typeof hideRightPanel !== "undefined"
+      ? hideRightPanel
+      : false;
+  %>
+
+  <!-- NAVBAR -->
+  <%- include("./nav") %>
+
+  <!-- SIDEBAR -->
+  <%- include("./sidebar") %>
+
+  <!-- PAGE WRAPPER -->
+  <div class="blogify-page-wrapper">
+
+    <!-- MAIN CONTENT -->
+    <div class="blogify-content-shift">
+      <div class="blogify-layout <%= _hideRightPanel ? 'no-right-panel' : '' %>">
+
+        <main class="blogify-main">
+          <%- body %>
+        </main>
+
+        <% if (!_hideRightPanel) { %>
+          <%- include("./rightPanel") %>
+        <% } %>
+
+      </div>
+    </div>
+
+    <!-- FOOTER ✅ MUST BE HERE -->
+    <%- include("./footer") %>
+
+  </div>
+
+  <!-- SCRIPTS -->
+  <%- include("./script") %>
+
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!-- ================= RIGHT PANEL ================= -->
+<aside class="right-panel">
+
+    <!-- ===== EDITOR’S SUGGESTION ===== -->
+    <section class="right-section">
+  
+      <h4 class="right-section-title">
+        <i class="fa-solid fa-feather"></i>
+        Editor’s Suggestion
+      </h4>
+  
+      <% if (suggestedBlog) { %>
+        <article class="blog-card blog-card--compact">
+  
+          <!-- FULL CLICK -->
+          <a href="/blog/<%= suggestedBlog._id %>" class="card-link"></a>
+  
+          <!-- LEFT CONTENT -->
+          <div class="blog-body">
+  
+            <!-- AUTHOR -->
+            <div class="author-info">
+              <img
+                src="<%= suggestedBlog.CREATED_BY?.profileImageURL || '/image/default.png' %>"
+                alt="author"
+              >
+              <span>
+                <%= suggestedBlog.CREATED_BY?.fullName || 'Blogify' %>
+              </span>
+            </div>
+  
+            <!-- TITLE -->
+            <div class="blog-title">
+              <%= suggestedBlog.title %>
+            </div>
+  
+            <!-- DESCRIPTION (Editor.js HTML – IMPORTANT) -->
+            <div class="blog-desc">
+              <%- suggestedBlog.content?.blocks
+                    ?.find(b => b.type === "paragraph")
+                    ?.data?.text || "" %>
+            </div>
+  
+            <!-- META -->
+            <div class="blog-footer">
+              <span><%= suggestedBlog.createdAt.toDateString() %></span>
+              <span>👁 1.6K</span>
+              <span>💬 33</span>
+  
+              <div class="meta-actions">
+                <i class="fa-regular fa-bookmark"></i>
+                <i class="fa-solid fa-ellipsis"></i>
+              </div>
+            </div>
+  
+          </div>
+  
+          <!-- RIGHT IMAGE -->
+          <img
+            src="<%= suggestedBlog.coverImageURL %>"
+            class="blog-image"
+            alt="cover"
+          >
+  
+        </article>
+      <% } else { %>
+        <p class="right-empty">No editor suggestion</p>
+      <% } %>
+  
+    </section>
+  
+    <!-- DIVIDER -->
+    <div class="right-divider"></div>
+  
+    <!-- ===== RECENT READS ===== -->
+    <!-- ===== RECENT READS ===== -->
+<section class="right-section right-scrollable">
+
+    <h4 class="right-section-title">
+      <i class="fa-regular fa-clock"></i>
+      Recent Reads
+    </h4>
+  
+    <% if (!user) { %>
+      <!-- GUEST USER -->
+      <div class="right-guest-box">
+        <p class="right-guest-text">
+          Login to see your recent reading history
+        </p>
+  
+        <a href="/user/signin" class="right-guest-btn">
+          Login
+        </a>
+      </div>
+  
+    <% } else if (recentReads && recentReads.length > 0) { %>
+  
+      <!-- LOGGED-IN USER WITH DATA -->
+      <div class="blog-list">
+        <% recentReads.forEach(blog => { %>
+  
+          <article class="blog-card blog-card--compact">
+            <a href="/blog/<%= blog._id %>" class="card-link"></a>
+  
+            <div class="blog-body">
+  
+              <div class="author-info">
+                <img src="<%= blog.CREATED_BY?.profileImageURL || '/image/default.png' %>">
+                <span><%= blog.CREATED_BY?.fullName %></span>
+              </div>
+  
+              <div class="blog-title">
+                <%= blog.title %>
+              </div>
+  
+              <div class="blog-desc">
+                <%= blog.content?.blocks?.find(b => b.type === "paragraph")?.data?.text || "" %>
+              </div>
+  
+              <div class="blog-footer">
+                <span><%= blog.createdAt.toDateString() %></span>
+                <span>👁 1.6K</span>
+                <span>💬 33</span>
+              </div>
+  
+            </div>
+  
+            <img src="<%= blog.coverImageURL %>" class="blog-image">
+          </article>
+  
+        <% }) %>
+      </div>
+  
+    <% } else { %>
+  
+      <!-- LOGGED-IN BUT NO READS -->
+      <p class="right-empty">No recent reads yet</p>
+  
+    <% } %>
+  
+  </section>
+  
+  </aside>

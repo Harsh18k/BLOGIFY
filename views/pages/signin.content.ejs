@@ -1,0 +1,65 @@
+<section class="auth-page">
+
+    <div class="auth-card">
+  
+      <!-- Google Sign-in -->
+      <a href="/auth/google" class="auth-google-btn">
+        <img
+          src="https://developers.google.com/identity/images/g-logo.png"
+          alt="Google"
+        />
+        Continue with Google
+      </a>
+  
+      <div class="auth-divider">
+        <span>or sign in</span>
+      </div>
+  
+      <!-- Sign-in Form -->
+      <form action="/user/signin" method="post" class="auth-form">
+  
+        <div class="mb-3">
+          <label for="email" class="form-label">Email address</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            name="email"
+            required
+          />
+        </div>
+  
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            name="password"
+            required
+          />
+        </div>
+  
+        <div class="text-end mb-3">
+          <a href="/user/forgot-password" class="auth-link">
+            Forgot password?
+          </a>
+        </div>
+  
+        <button type="submit" class="btn btn-primary w-100">
+          Sign In
+        </button>
+      </form>
+  
+      <!-- Switch to Sign Up -->
+      <div class="text-center mt-3">
+        <small class="text-muted">
+          Don't have an account?
+          <a href="/user/signup" class="auth-link">Create one</a>
+        </small>
+      </div>
+  
+    </div>
+  
+  </section>
+  

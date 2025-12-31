@@ -1,0 +1,72 @@
+<!-- ================= BLOGIFY SIDEBAR ================= -->
+<aside class="blogify-sidebar">
+
+    <div class="sidebar-content">
+  
+      <!-- PRIMARY NAV -->
+      <nav class="sidebar-section">
+  
+        <!-- HOME -->
+        <a href="/blogs" class="sidebar-item">
+          <i class="fa-solid fa-house"></i>
+          <span>Home</span>
+        </a>
+  
+        <!-- LIBRARY -->
+        <a href="/dashboard/bookmarks" class="sidebar-item">
+          <i class="fa-regular fa-bookmark"></i>
+          <span>Library</span>
+        </a>
+  
+        <!-- PROFILE -->
+        <% if (user) { %>
+          <a href="/user/profile" class="sidebar-item">
+            <i class="fa-regular fa-user"></i>
+            <span>Profile</span>
+          </a>
+        <% } %>
+  
+        <!-- STORIES (MY BLOGS) -->
+        <% if (user) { %>
+          <a href="/dashboard/my-blogs" class="sidebar-item">
+            <i class="fa-regular fa-file-lines"></i>
+            <span>Stories</span>
+          </a>
+        <% } %>
+  
+        <!-- STATS (FUTURE / SAFE PLACEHOLDER) -->
+        <% if (user) { %>
+          <a href="/dashboard/stats" class="sidebar-item disabled">
+            <i class="fa-solid fa-chart-column"></i>
+            <span>Stats</span>
+          </a>
+        <% } %>
+  
+      </nav>
+  
+      <hr class="sidebar-divider">
+  
+      <!-- SECONDARY -->
+      <nav class="sidebar-section">
+  
+        <% if (user) { %>
+          <a href="/dashboard/following" class="sidebar-item">
+            <i class="fa-regular fa-user-group"></i>
+            <span>Following</span>
+          </a>
+        <% } %>
+  
+        <a href="/blogs" class="sidebar-item muted">
+          <i class="fa-solid fa-plus"></i>
+          <span>Find writers & blogs</span>
+        </a>
+  
+        <a href="/blogs" class="sidebar-subtext">
+          See suggestions
+        </a>
+  
+      </nav>
+  
+    </div>
+  
+  </aside>

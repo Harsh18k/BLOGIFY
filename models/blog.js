@@ -41,7 +41,13 @@ const blogSchema = new Schema(
       enum: ["DRAFT", "PUBLISHED", "DELETED"],
       default: "PUBLISHED",
     },
+    isEditorPick: {
+      type: Boolean,
+      default: false,
+      index: true
+    },
   },
+  
   { timestamps: true }
 );
 

@@ -1,0 +1,591 @@
+<style>
+    html,
+    body {
+      height: 100%;
+      margin: 0;
+      background: #f3f4f6;
+      /* Removed overflow: hidden to allow scrolling */
+    }
+  
+    .editor-page {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+  
+    /* ================= TOP BAR ================= */
+    .editor-topbar {
+      background: #ffffff;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 14px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      gap: 14px;
+    }
+  
+    .editor-topbar h4 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 18px;
+    }
+  
+    .editor-actions {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+  
+    /* 🔔 Autosave status (UNCHANGED LOOK) */
+    #autosaveStatus {
+      font-size: 12px;
+      color: #6b7280;
+      white-space: nowrap;
+    }
+  
+    /* 🔄 AUTOSAVE SPINNER */
+    .autosave-spinner {
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border: 2px solid #d1d5db;
+      border-top-color: #6366f1;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 6px;
+      vertical-align: middle;
+    }
+  
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  
+    /* ✅ SAVED STATE */
+    .autosave-success {
+      color: #16a34a;
+      /* green */
+      font-weight: 500;
+    }
+  
+    /* 🔒 ONLY for draft button + autosave text */
+    .locked {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+  
+    .locked:hover {
+      cursor: not-allowed;
+    }
+  
+    /* ================= MAIN ================= */
+    .editor-main {
+      flex: 1;
+      padding: 24px 48px;
+      background: #f3f4f6;
+      position: relative;
+      /* Removed fixed height and overflow-y to allow natural scrolling */
+    }
+  
+    .editor-form {
+      width: 100%;
+    }
+  
+    /* ================= COVER IMAGE (UNCHANGED) ================= */
+    .cover-dropzone {
+      background: #ffffff;
+      border: 2px dashed #d1d5db;
+      border-radius: 14px;
+      padding: 28px;
+      text-align: center;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+  
+    .cover-dropzone:hover {
+      background: #f9fafb;
+      border-color: #6366f1;
+    }
+  
+    .cover-text {
+      color: #6b7280;
+      font-size: 15px;
+    }
+  
+    .cover-preview {
+      display: none;
+      margin-top: 12px;
+      max-height: 260px;
+      overflow: hidden;
+      position: relative;
+    }
+  
+    .cover-preview img {
+      max-width: 100%;
+      border-radius: 12px;
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+    }
+  
+    .cover-input {
+      display: none;
+    }
+  
+    /* 🔥 REMOVE COVER IMAGE BUTTON */
+    .cover-remove {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      font-size: 18px;
+      cursor: pointer;
+    }
+  
+    /* ================= TITLE ================= */
+    .blog-title-input {
+      font-size: 30px;
+      font-weight: 700;
+      border: none;
+      outline: none;
+      background: transparent;
+      margin: 20px 0;
+      width: 100%;
+    }
+  
+    /* ================= EDITOR (UNCHANGED) ================= */
+    #editorjs {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 32px 48px;
+      min-height: 70vh;
+    }
+  
+    .ce-block__content,
+    .ce-toolbar__content {
+      max-width: 100% !important;
+    }
+  
+    /* ================= HINT ================= */
+    .editor-hint {
+      position: absolute;
+      left: 20px;
+      top: 280px;
+      background: #111827;
+      color: #ffffff;
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 14px;
+      animation: pulse 1.8s infinite;
+      z-index: 20;
+    }
+  
+    @keyframes pulse {
+      0% {
+        transform: scale(1);
+        opacity: 0.9;
+      }
+  
+      50% {
+        transform: scale(1.04);
+        opacity: 1;
+      }
+  
+      100% {
+        transform: scale(1);
+        opacity: 0.9;
+      }
+    }
+  
+    @media (max-width: 768px) {
+      .editor-main {
+        padding: 16px;
+      }
+  
+      #editorjs {
+        padding: 20px;
+      }
+  
+      .editor-hint {
+        display: none;
+      }
+  
+      #autosaveStatus {
+        display: none;
+      }
+    }
+  </style>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <!-- EMPTY CONTENT WARNING MODAL -->
+  <div class="modal fade" id="emptyContentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+  
+        <div class="modal-header">
+          <h5 class="modal-title">Nothing to save </h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+  
+        <div class="modal-body">
+          <p>Please write something before using <strong>Preview</strong> or <strong>Save Draft</strong>.</p>
+        </div>
+  
+        <div class="modal-footer">
+          <button class="btn btn-primary" data-bs-dismiss="modal">
+            Okay, I'll write
+          </button>
+        </div>
+  
+      </div>
+    </div>
+  </div>
+  
+  <div class="editor-page">
+  
+    <!-- ================= TOP BAR ================= -->
+    <div class="editor-topbar">
+      <h4>✍️ Write a New Blog</h4>
+  
+      <div class="editor-actions">
+  
+        <!-- ✅ Autosave text ONLY visually locked -->
+        <span id="autosaveStatus" class="<%= user?.isPremium ? '' : 'locked' %>">
+          <span id="autosaveSpinner" class="autosave-spinner" style="display:none"></span>
+          <span id="autosaveText">
+            <%= user?.isPremium ? 'Draft not saved' : 'Auto-save (Premium)' %>
+          </span>
+        </span>
+  
+        <!-- ✅ Preview ALWAYS NORMAL -->
+        <button type="button" id="previewBtn" class="btn btn-outline-primary">
+          Preview
+        </button>
+  
+        <!-- 🔒 Draft button locked ONLY for non-premium -->
+        <span <% if (!user?.isPremium) { %>
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          title="Subscribe to enable drafts"
+          <% } %>
+            >
+            <button type="button" id="draftBtn" class="btn btn-outline-primary <%= user?.isPremium ? '' : 'locked' %>"
+              <%=user?.isPremium ? '' : 'disabled' %>
+              >
+              Save Draft
+            </button>
+        </span>
+  
+        <button type="submit" form="blogForm" class="btn btn-primary">
+          Publish
+        </button>
+      </div>
+    </div>
+  
+    <!-- ================= MAIN ================= -->
+    <div class="editor-main">
+  
+      <div id="editorHint" class="editor-hint">
+        Click <strong>+</strong> or type <strong>/</strong><br>
+        to add headings, images, code & more ✨
+      </div>
+  
+      <form id="blogForm" class="editor-form" action="/blog" method="POST" enctype="multipart/form-data">
+        <% if (draft && draft._id) { %>
+          <input type="hidden" id="existingDraftId" value="<%= draft._id %>">
+          <% } %>
+  
+            <!-- COVER IMAGE -->
+            <label class="cover-dropzone">
+              <input type="file" name="coverImage" class="cover-input" accept="image/*" id="coverInput">
+              <div class="cover-text">
+                🖼️ <strong>Cover Image</strong><br>
+                Click to upload a cover image
+              </div>
+              <div class="cover-preview" id="coverPreview"></div>
+            </label>
+  
+            <!-- TITLE -->
+            <input type="text" name="title" class="blog-title-input" placeholder="Enter your blog title..."
+            value="<%= draft && draft.title ? draft.title : '' %>" required>
+  
+            <!-- EDITOR -->
+            <div id="editorjs"></div>
+            <input type="hidden" name="content" id="content">
+      </form>
+    </div>
+  
+  </div>
+  
+  <!-- ================= EDITOR SCRIPTS (100% ORIGINAL) ================= -->
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/editorjs@2.30.2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@2.8.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/list@1.9.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/quote@2.5.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/paragraph@2.11.3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/code@2.9.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@1.3.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/image@2.8.1"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/embed@2.5.3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@2.3.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/checklist@1.5.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@1.4.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@1.3.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@editorjs/link@2.5.0"></script>
+  
+  <script>
+    const IS_PREMIUM = <%= user?.isPremium ? 'true' : 'false' %>;
+    let currentDraftId = null;
+  
+    // edit feature
+    const existingDraftInput = document.getElementById("existingDraftId");
+    if (existingDraftInput) {
+      currentDraftId = existingDraftInput.value;
+    }
+  
+    const EXISTING_DRAFT_DATA = <%- JSON.stringify(draft && draft.content ? draft.content : null) %>;
+  
+  
+    /* ================= EDITOR INIT (UNCHANGED) ================= */
+    const editor = new EditorJS({
+      holder: 'editorjs',
+      placeholder: 'Start writing your story...',
+      data: EXISTING_DRAFT_DATA || undefined,
+      tools: {
+        header: { class: Header, inlineToolbar: true },
+        paragraph: { class: Paragraph, inlineToolbar: true },
+        list: { class: List, inlineToolbar: true },
+        quote: { class: Quote, inlineToolbar: true },
+        code: CodeTool,
+        delimiter: Delimiter,
+        checklist: Checklist,
+        inlineCode: InlineCode,
+        marker: Marker,
+        table: { class: Table, inlineToolbar: true },
+        embed: { class: Embed },
+        linkTool: { class: LinkTool, config: { endpoint: '/blog/fetch-link-preview' } },
+        image: { class: ImageTool, config: { endpoints: { byFile: '/blog/upload-image' } } }
+      }
+    });
+  
+    // ================= AUTOSAVE UI ELEMENTS =================
+    const status = document.getElementById("autosaveStatus");
+    const spinner = document.getElementById("autosaveSpinner");
+    const statusText = document.getElementById("autosaveText");
+    if (IS_PREMIUM) {
+      spinner.style.display = "none";
+      statusText.innerText = "Not saved yet";
+    }
+    // modal helper script
+    function showEmptyContentModal() {
+      const modal = new bootstrap.Modal(
+        document.getElementById("emptyContentModal")
+      );
+      modal.show();
+    }
+  
+    //
+    document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach(el => {
+      new bootstrap.Tooltip(el);
+    });
+    document.querySelector(".blog-title-input")
+      .addEventListener("input", resetAutoSaveTimer);
+  
+    /* ================= PUBLISH (UNCHANGED) ================= */
+    document.getElementById("blogForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+  
+      const data = await editor.save();
+      if (!data.blocks.length) return alert("Write something first ✍️");
+  
+      document.getElementById("content").value = JSON.stringify(data);
+  
+      if (currentDraftId) {
+        let hiddenDraft = document.getElementById("draftIdInput");
+        if (!hiddenDraft) {
+          hiddenDraft = document.createElement("input");
+          hiddenDraft.type = "hidden";
+          hiddenDraft.name = "draftId";
+          hiddenDraft.id = "draftIdInput";
+          e.target.appendChild(hiddenDraft);
+        }
+        hiddenDraft.value = currentDraftId;
+      }
+  
+      e.target.submit();
+    });
+  
+    /* ================= MANUAL DRAFT (PREMIUM ONLY) ================= */
+    document.getElementById("draftBtn").addEventListener("click", async () => {
+      if (!IS_PREMIUM) return;
+  
+      const data = await editor.save();
+      const title = document.querySelector(".blog-title-input").value.trim();
+  
+      if (!title && !data.blocks.length) {
+        showEmptyContentModal();
+        return;
+      }
+  
+      const formData = new FormData();
+      formData.append("title", document.querySelector(".blog-title-input").value || "Untitled Draft");
+      formData.append("content", JSON.stringify(data));
+      formData.append("status", "DRAFT");
+  
+      if (currentDraftId) formData.append("draftId", currentDraftId);
+      if (coverInput.files[0]) formData.append("coverImage", coverInput.files[0]);
+  
+      const res = await fetch("/blog/draft", {
+        method: "POST",
+        body: formData,
+        credentials: "include"
+      });
+  
+      const json = await res.json();
+      if (json?.draftId) currentDraftId = json.draftId;
+  
+      window.location.href = "/dashboard/drafts";
+    });
+  
+    /* ================= AUTO SAVE (PREMIUM ONLY) ================= */
+    let autoSaveTimeout, autoSaveInterval;
+    const autoSaveDelay = 10;
+  
+  
+    function resetAutoSaveTimer() {
+      if (!IS_PREMIUM) return;
+      statusText.classList.remove("autosave-success");
+  
+      clearTimeout(autoSaveTimeout);
+      clearInterval(autoSaveInterval);
+  
+      if (spinner.style.display !== "inline-block") {
+        spinner.style.display = "inline-block";
+      }
+  
+  
+      let seconds = autoSaveDelay;
+      statusText.innerText = `Auto-saving in ${seconds}s`;
+  
+      autoSaveInterval = setInterval(() => {
+        seconds--;
+        if (seconds > 0 && statusText.innerText !== `Auto-saving in ${seconds}s`) {
+          statusText.innerText = `Auto-saving in ${seconds}s`;
+        }
+      }, 1000);
+  
+      autoSaveTimeout = setTimeout(async () => {
+        clearInterval(autoSaveInterval);
+  
+        const data = await editor.save();
+        if (!data.blocks.length) return;
+  
+        const formData = new FormData();
+        formData.append("title", document.querySelector(".blog-title-input").value || "Untitled Draft");
+        formData.append("content", JSON.stringify(data));
+  
+        if (currentDraftId) formData.append("draftId", currentDraftId);
+        if (coverInput.files[0]) formData.append("coverImage", coverInput.files[0]);
+  
+        const res = await fetch("/blog/draft", {
+          method: "POST",
+          body: formData,
+          credentials: "include"
+        });
+  
+        const json = await res.json();
+        if (json?.draftId) currentDraftId = json.draftId;
+  
+        spinner.style.display = "none";
+        statusText.innerText = "Draft saved ✓";
+        statusText.classList.add("autosave-success");
+      }, autoSaveDelay * 1000);
+    }
+  
+    document.querySelector("#editorjs")
+      .addEventListener("keydown", resetAutoSaveTimer);
+  
+    /* ================= COVER PREVIEW (UNCHANGED) ================= */
+    const coverInput = document.getElementById("coverInput");
+    const coverPreview = document.getElementById("coverPreview");
+    <% if (draft && draft.coverImageURL) { %>
+      coverPreview.innerHTML = `
+    <img src="<%= draft.coverImageURL %>">
+    <button type="button" class="cover-remove" id="removeCover">&times;</button>
+  `;
+      coverPreview.style.display = "block";
+  
+      document.getElementById("removeCover").addEventListener("click", () => {
+        coverInput.value = "";
+        coverPreview.innerHTML = "";
+        coverPreview.style.display = "none";
+        resetAutoSaveTimer();
+      });
+  <% } %>
+  
+      coverInput.addEventListener("change", () => {
+        const file = coverInput.files[0];
+        if (!file) return;
+  
+        const reader = new FileReader();
+        reader.onload = () => {
+          coverPreview.innerHTML = `
+  <img src="${reader.result}">
+  <button type="button" class="cover-remove" id="removeCover">&times;</button>
+  `;
+          coverPreview.style.display = "block";
+  
+          // ❌ remove cover image
+          document.getElementById("removeCover").addEventListener("click", () => {
+            coverInput.value = "";
+            coverPreview.innerHTML = "";
+            coverPreview.style.display = "none";
+            resetAutoSaveTimer(); // autosave on remove
+          });
+        };
+  
+        reader.readAsDataURL(file);
+  
+        resetAutoSaveTimer(); // autosave on upload
+      });
+  
+    /* ================= PREVIEW (UNCHANGED) ================= */
+    document.getElementById("previewBtn").addEventListener("click", async () => {
+      const content = await editor.save();
+      const title = document.querySelector(".blog-title-input").value.trim();
+  
+      if (!title && !content.blocks.length) {
+        showEmptyContentModal();
+        return;
+      }
+  
+      sessionStorage.setItem(
+        "blogPreviewData",
+        JSON.stringify({
+          title: title || "Untitled Draft",
+          content,
+          coverImageURL: coverInput.files[0]
+            ? URL.createObjectURL(coverInput.files[0])
+            : ""
+        })
+      );
+  
+      window.open("/blog/preview", "_blank");
+    });
+  
+    setTimeout(() => {
+      const hint = document.getElementById("editorHint");
+      if (hint) hint.style.display = "none";
+    }, 5000);
+  </script>
+  

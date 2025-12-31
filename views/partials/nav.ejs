@@ -1,125 +1,189 @@
-<nav class="navbar navbar-expand-lg bg-body-tertiary bg-dark border-bottom" data-bs-theme="dark">
+<!-- ================= BLOGIFY NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg blogify-navbar border-bottom">
   <div class="container-fluid">
 
-    <a class="navbar-brand fw-bold" href="/">Blogify</a>
+    <!-- LEFT CLUSTER -->
+    <div class="d-flex align-items-center">
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <!-- HAMBURGER -->
+      <button
+        class="btn btn-link text-dark fs-4 p-0 me-3"
+        id="sidebarToggle"
+        type="button">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+
+      <span class="nav-divider"></span>
+
+      <!-- BRAND -->
+      <a class="navbar-brand fw-bold fs-3 m-0 mx-3" href="/">
+        Blogify
+      </a>
+
+      <span class="nav-divider"></span>
+
+      <!-- EXPLORE BLOGS -->
+      <a href="/blogs" class="nav-link fw-semibold mx-3">
+        Explore blogs
+      </a>
+
+      <span class="nav-divider"></span>
+
+      <!-- SEARCH (UI ONLY FOR NOW) -->
+      <div class="blogify-search mx-3 d-none d-md-flex">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" placeholder="Search">
+      </div>
+
+    </div>
+
+    <!-- MOBILE TOGGLER -->
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarNav">
       <span class="navbar-toggler-icon"></span>
     </button>
 
-    <div class="collapse navbar-collapse" id="navbarNav">
-
-      <!-- LEFT SIDE -->
-      <ul class="navbar-nav me-auto">
-
-        <li class="nav-item">
-          <a class="nav-link active" href="/blogs">Blogs</a>
-        </li>
-
-
-        <% if (user) { %>
-          <li class="nav-item">
-            <a class="nav-link" href="/blog/add-new">Add Blog</a>
-          </li>
-          <% } %>
-
-      </ul>
-
-      <!-- RIGHT SIDE -->
-      <ul class="navbar-nav align-items-center gap-2">
+    <!-- RIGHT CLUSTER -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center">
 
         <% if (!user) { %>
 
-          <li class="nav-item">
-            <a class="nav-link" href="/user/signin">Signin</a>
+          <li class="nav-item mx-2">
+            <a class="nav-link fw-semibold" href="/user/signin">
+              Signin
+            </a>
           </li>
 
-          <li class="nav-item">
-            <a class="nav-link" href="/user/signup">Create Account</a>
+          <span class="nav-divider"></span>
+
+          <li class="nav-item mx-2">
+            <a class="nav-link fw-semibold" href="/user/signup">
+              Create Account
+            </a>
           </li>
 
-          <% } else { %>
+        <% } else { %>
 
-            <!-- PREMIUM BUTTON / BADGE -->
-            <li class="nav-item">
-              <% if (!user.isPremium) { %>
-                <a href="/pricing" class="btn btn-warning btn-sm fw-semibold">
-                  ⭐ Go Premium
-                </a>
-                <% } else { %>
-                  <span class="badge bg-success px-3 py-2">
-                    ⭐ Premium
-                  </span>
-                  <% } %>
-            </li>
+          <!-- WRITE -->
+          <li class="nav-item mx-2">
+            <a
+              class="nav-link fw-semibold d-flex align-items-center gap-1"
+              href="/blog/add-new">
+              <i class="fa-regular fa-pen-to-square"></i>
+              <span class="d-none d-md-inline">Write</span>
+            </a>
+          </li>
 
-            <!-- PROFILE DROPDOWN (UNCHANGED LOGIC) -->
-            <li class="nav-item dropdown ms-2">
+          <span class="nav-divider"></span>
 
-              <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button"
-                data-bs-toggle="dropdown">
+          <!-- NOTIFICATIONS (UI ONLY) -->
+          <li class="nav-item mx-2">
+            <button class="btn btn-link text-dark fs-5 p-0">
+              <i class="fa-regular fa-bell"></i>
+            </button>
+          </li>
 
-                <img src="<%= user.profileImageURL || '/image/default.png' %>" onerror="this.src='/image/default.png'"
-                  style="width:30px;height:30px;border-radius:50%;object-fit:cover;margin-right:8px;">
+          <span class="nav-divider"></span>
 
-                <%= user.fullName || "User" %>
+          <!-- PREMIUM -->
+          <li class="nav-item mx-2">
+            <% if (!user.isPremium) { %>
+              <a href="/pricing" class="btn btn-warning fw-semibold px-3">
+                Go Premium
               </a>
-
-              <ul class="dropdown-menu dropdown-menu-end">
-
-                <li>
-                  <a class="dropdown-item" href="/user/profile">My Profile</a>
-                </li>
-                <li>
-                  <a class="dropdown-item d-flex align-items-center" href="/dashboard/drafts">
-
-                    <span class="fw-medium">
-                      My Drafts
-                      <% if (draftCount> 0) { %>
-                        <span class="badge bg-warning text-dark rounded-pill ms-1" style="
-                                font-size:10px;
-                                padding:2px 6px;
-                                vertical-align:middle;
-                              ">
-                          <%= draftCount %>
-                        </span>
-                        <% } %>
-                    </span>
-
-                  </a>
-                </li>
-
-                <li>
-                  <a class="dropdown-item" href="/user/signout">Signout</a>
-                </li>
-
-
-              </ul>
-            </li>
-
+            <% } else { %>
+              <span class="badge bg-success px-3 py-2 fs-6">
+                Premium
+              </span>
             <% } %>
+          </li>
+
+          <span class="nav-divider"></span>
+
+          <!-- PROFILE DROPDOWN -->
+          <li class="nav-item dropdown mx-2">
+
+            <a
+              class="nav-link dropdown-toggle d-flex align-items-center"
+              href="#"
+              role="button"
+              data-bs-toggle="dropdown">
+
+              <img
+                src="<%= user.profileImageURL || '/image/default.png' %>"
+                onerror="this.src='/image/default.png'"
+                class="rounded-circle me-2"
+                style="width:34px;height:34px;object-fit:cover;"
+              >
+
+              <span class="fw-semibold">
+                <%= user.fullName || "User" %>
+              </span>
+            </a>
+
+            <ul class="dropdown-menu dropdown-menu-end">
+
+              <li>
+                <a class="dropdown-item" href="/user/profile">
+                  My Profile
+                </a>
+              </li>
+
+              <li>
+                <a
+                  class="dropdown-item d-flex justify-content-between align-items-center"
+                  href="/dashboard/drafts">
+                  <span>My Drafts</span>
+
+                  <% if (draftCount > 0) { %>
+                    <span
+                      class="badge bg-warning text-dark rounded-pill"
+                      style="font-size:11px;">
+                      <%= draftCount %>
+                    </span>
+                  <% } %>
+                </a>
+              </li>
+
+              <li>
+                <a class="dropdown-item" href="/user/signout">
+                  Signout
+                </a>
+              </li>
+
+            </ul>
+          </li>
+
+        <% } %>
 
       </ul>
-
     </div>
   </div>
 </nav>
 
-<!-- 🔔 FLASH MESSAGES -->
-<% if (errorMessage) { %>
-  <div class="container mt-3">
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-      <%= errorMessage %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-  </div>
-  <% } %>
 
-    <% if (successMessage) { %>
-      <div class="container mt-3">
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <%= successMessage %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        </div>
+
+<!-- ================= FLASH MESSAGES ================= -->
+<div class="flash-wrapper">
+  <% if (errorMessage) { %>
+    <div class="flash-wrapper">
+      <div class="alert alert-danger alert-dismissible fade show">
+        <span><%= errorMessage %></span>
+        <button class="btn-close" data-bs-dismiss="alert"></button>
       </div>
-      <% } %>
+    </div>
+  <% } %>
+  
+  <% if (successMessage) { %>
+    <div class="flash-wrapper">
+      <div class="alert alert-success alert-dismissible fade show">
+        <span><%= successMessage %></span>
+        <button class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+    </div>
+  <% } %>
+</div>

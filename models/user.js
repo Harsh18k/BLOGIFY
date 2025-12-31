@@ -1,4 +1,5 @@
 const { Schema, model } = require("mongoose");
+const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 
 const userSchema = new Schema(
@@ -37,7 +38,12 @@ const userSchema = new Schema(
     },
     orderId: {
       type: String, // razorpay_order_id
-    },
+    },recentReads: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Blog"
+      }
+    ]
     
   },
   { timestamps: true }
